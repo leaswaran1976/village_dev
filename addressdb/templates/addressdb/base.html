@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <title>{% block title %}Village Site{% endblock title %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="{% static 'addressdb/css/jquery-ui-timepicker-addon.min.css' %}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="{% static 'addressdb/js/jquery-ui-timepicker-addon.min.js' %}"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'addressdb/css/custom.css' %}"/>
+    {% block css %}{% endblock css %} 
+    {% block head %}{% endblock head %}
+</head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top navbar-custom">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{% url 'addressdb:home' %}"><strong>Village Database</strong></a>
+                </div>
+
+                <div class="navbar-collapse collapse navbar-right">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{% url 'addressdb:home' %}"><strong>Home</strong></a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'addressdb:add_contact' %}"><span class="glyphicon glyphicon-plus"></span> <strong>Add Dependent</strong></a></li>
+                        {% endif %}
+                    </ul>                    
+                    <ul class="nav navbar-nav">
+                        {% if user.is_authenticated %}
+                            <li class="navbar-text"><strong>Welcome, {{ user.username }}!</strong></li>
+                            <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> <strong>Logout</strong></a></li>
+                        {% else %}
+                            <li><a href="{% url 'addressdb:signup' %}"><span class="glyphicon glyphicon-user"></span> <strong>Sign Up</strong></a></li>
+                            <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> <strong>Login</strong></a></li>
+                        {% endif %}
+                    </ul>
+
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="container vertical-center">
+            {% block content %}{% endblock content %}
+        </div>
+
+        {% block js %}
+
+        {% endblock js %}
+    </body>
+</html>

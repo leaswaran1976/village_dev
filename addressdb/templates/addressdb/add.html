@@ -1,0 +1,14 @@
+{% extends 'addressdb/base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block title %}Register | {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+           	{% crispy person_form %}
+           	{% crispy contact_form %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'addressdb/base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block title %}Register | {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+        <div class="account-wall">
+       		<img class="profile-img" src="{% static 'addressdb/images/logo.png' %}" alt=""/>
+     		{% crispy form %}
+        </div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$('.control-label').css({color:'#FEE202'});
+	$('.help-block').css({color:'salmon'});
+</script>
+{%endblock %}

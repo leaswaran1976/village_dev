@@ -1,0 +1,26 @@
+{% extends 'addressdb/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login | {{ block.super }}{% endblock %}
+
+{% block headline %}<h1>Login to Village Address Book</h1>{% endblock %}
+
+{% block content %}
+
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+		<div class="account-wall">
+        	<img class="profile-img" src="{% static 'addressdb/images/logo.png' %}" alt="">
+        	{% crispy form %}
+		</div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$('.control-label').css({color:'#FEE202'});
+</script>
+{%endblock %}

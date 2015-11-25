@@ -1,0 +1,554 @@
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
+from django import forms
+from django.conf import settings
+from django.forms import ModelForm
+from django.forms.models import inlineformset_factory
+from django.core.exceptions import ValidationError
+from .models import Person, Contact
+
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit, Layout, HTML, Div
+from crispy_forms.bootstrap import FormActions, PrependedText
+from bootstrap3_datetime.widgets import DateTimePicker
+#from phonenumber_field.modelfields import PhoneNumberField
+
+class RegistrationForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super(RegistrationForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-signin'
+        self.helper.layout = Layout(
+            'username',
+            'password1',
+            'password2',
+            FormActions(
+                Submit('register', 'Sign me up!', css_class='btn-primary'),
+                HTML('<a href={% url "addressdb:home" %} class="btn-primary btn">Cancel</a>'),
+            )
+        )
+
+class LoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-signin'
+        self.helper.layout = Layout(
+            PrependedText('username', '<span class="glyphicon glyphicon-user"></span>'),
+            PrependedText('password', '<span class="glyphicon glyphicon-lock"></span>'),
+            Div(HTML('<br/>')),
+            FormActions(
+                Submit('login', 'Login', css_class='btn-lg btn-block'),
+            ),
+            HTML('<a href={% url "addressdb:changepassword" %} class="pull-left need-help"><strong>Forgot Password?</strong></a>')
+        )
+
+    def clean_remember_me(self):
+        """clean method for remember_me """
+        remember_me = self.cleaned_data.get['remember_me']
+        if not remember_me:
+            settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+        else:
+            settings.SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+        return remember_me
+
+class PersonForm(ModelForm): 
+    GENDER_CHOICES = (
+        ('Sgender', 'Select Gender'),
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+    )  
+
+    GOTHRA_CHOICES = (
+        ('Sgothra', 'Select Gothra'),
+        ('Aatreya', 'Aatreya'),
+        ('Agastya', 'Agastya'),
+        ('Angirasa', 'Angirasa'),
+        ('Atri', 'Atri'),
+        ('Audala', 'Audala'),
+        ('Bharadwaj', 'Bharadwaj'),
+        ('Bhargava', 'Bhargava'),
+        ('Bhrigu', 'Bhrigu'),
+        ('Brihadbala', 'Brihadbala'),
+        ('Chandratre', 'Chandratre'),
+        ('Chananjaya', 'Dhananjaya'),
+        ('Garg', 'Garg'),
+        ('Gautam', 'Gautam'),
+        ('Harinama', 'Harinama'),
+        ('Haritasya', 'Haritasya'),
+        ('Jamadagni', 'Jamadagni'),
+        ('Kadam', 'Kadam'),
+        ('Kashyapa', 'Kashyapa'),
+        ('Kaundinya', 'Kaundinya'),
+        ('Kaushikasa', 'Kaushikasa'),
+        ('Manu', 'Manu'),
+        ('Marichi', 'Marichi'),
+        ('Meena', 'Meena'),
+        ('Parashar', 'Parashar'),
+        ('Sandilya', 'Sandilya'),
+        ('Shiva', 'Shiva'),
+        ('Siwal', 'Siwal'),
+        ('Upamanyu', 'Upamanyu'),
+        ('Upreti', 'Upreti'),
+        ('Vashista', 'Vashista'),
+        ('Vishnu', 'Vishnu'),
+        ('Vishvamitra', 'Vishvamitra'),
+        ('Yadav', 'Yadav'),
+        ('NA', 'Not Available'),
+    )
+
+    NAKSHATRA_CHOICES = (
+        ('Snakshatra', 'Select Nakshatra'),
+        ('Anurada', 'Anurada'),
+        ('Ardra', 'Ardra'),
+        ('Ashlesha', 'Ashlesha'),
+        ('Ashwini', 'Ashwini'),
+        ('Bharani', 'Bharani'),
+        ('Chitra', 'Chitra'),
+        ('Dhanishta', 'Dhanishta'),
+        ('Hasta', 'Hasta'),
+        ('Jyeshta', 'Jyeshta'),
+        ('Krittika', 'Krittika'),
+        ('Magha', 'Magha'),
+        ('Mrigashira', 'Mrigashira'),
+        ('Mula', 'Mula'),
+        ('Punarvasu', 'Punarvasu'),
+        ('Purva ashadha', 'Purva Ashadha'),
+        ('Purva bhadrapada', 'Purva Bhadrapada'),
+        ('Purva phalguni', 'Purva Phalguni'),
+        ('Pushya', 'Pushya'),
+        ('Revati', 'Revati'),
+        ('Rohini', 'Rohini'),
+        ('Shatabhishak', 'Shatabhishak'),
+        ('Shravana', 'Shravana'),
+        ('Swati', 'Swati'),
+        ('Uttara ashadha', 'Uttara Ashadha'),
+        ('Uttara bhadrapada', 'Uttara Bhadrapada'),
+        ('Uttara phalguni', 'Uttara Phalguni'),
+        ('Vishaka', 'Vishaka'),
+        ('NA', 'Not Available'),
+    )
+
+    BLOOD_GROUP_CHOICES = (
+        ('Sbg', 'Select Blood Group'),
+        ('O+', 'O+'),
+        ('O-', 'O-'),
+        ('A+', 'A+'),
+        ('A-', 'A-'),
+        ('B+', 'B+'),
+        ('B-', 'B-'),
+        ('AB+', 'AB+'),
+        ('AB-', 'AB-'),
+        ('NA', 'Not Available'),
+    )
+
+    FAMILY_NAME_CHOICES = (
+        ('Sfn', 'Select Family Name'),
+        ('Choodamani', 'Choodamani'),
+        ('Deekshitar', 'Deekshitar'),
+        ('Essuatthan', 'Essuatthan'),
+        ('Jadavallabhar', 'Jadavallabhar'),
+        ('Kilimangalam', 'Kilimangalam'),
+        ('Maanupattar', 'Maanu Pattar'),
+        ('Neelupattar', 'Neelu Pattar'),
+        ('Seshanpattar', 'Seshanpattar'),
+        ('Vaadhyaar', 'Vaadhyaar'),
+        ('NA', 'Not Available'),
+    )
+
+    first_name = forms.CharField(required=True, label="First Name", widget=forms.TextInput(attrs={'placeholder': 'First Name'}))
+    last_name = forms.CharField(required=True, label="Last Name", widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
+    nick_name = forms.CharField(required=False, label="Nick Name", widget=forms.TextInput(attrs={'placeholder': 'Nick/Pet Name'}))
+    #family_name = forms.CharField(required=False, label="Family Name", widget=forms.TextInput(attrs={'placeholder': 'Kilimangalam, Maanu Pattar, Neelu Pattar, Dixithar'}))
+    family_name = forms.ChoiceField(choices = FAMILY_NAME_CHOICES, required = True, label = 'Family Name')
+    father_name = forms.CharField(required=False, label="Father Name", widget=forms.TextInput(attrs={'placeholder': 'Name - Nick Name'}))
+    mother_name = forms.CharField(required=False, label="Mother Name", widget=forms.TextInput(attrs={'placeholder': 'Name - Nick Name'}))
+    gothram = forms.ChoiceField(choices = GOTHRA_CHOICES, required = True, label = 'Gothra')
+    star = forms.ChoiceField(choices = NAKSHATRA_CHOICES, required=True, label="Nakshatra")
+    gender = forms.ChoiceField(choices = GENDER_CHOICES, required=True, label="Gender")
+    blood_group = forms.ChoiceField(choices = BLOOD_GROUP_CHOICES, required=True, label="Blood Group")
+    email = forms.EmailField(required=True, label="Preferred Email", widget=forms.TextInput(attrs={'placeholder': 'Email Address'}))
+    alternate_email = forms.EmailField(required=False, label="Alternate Email", widget=forms.TextInput(attrs={'placeholder': 'Alternate Email Address'}))
+    #primary_phone = forms.CharField(required=True, label="Preferred Phone", widget=forms.TextInput(attrs={'placeholder': '+919856745633 (Mobile#)'}))
+    primary_phone = forms.RegexField(regex=r'^\+?1?\d{9,15}$', error_message = ("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."), widget=forms.TextInput(attrs={'placeholder': '+919882675673'}))
+    #secondary_phone1 = forms.CharField(required=False, label="Alternate Phone", widget=forms.TextInput(attrs={'placeholder': 'Home# - +914912675673'}))
+    secondary_phone1 = forms.RegexField(required=False, regex=r'^\+?1?\d{9,15}$', error_message = ("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."), widget=forms.TextInput(attrs={'placeholder': '+914912675673'}))
+    #secondary_phone2 = forms.CharField(required=False, label="Secondary Phone 2", widget=forms.TextInput(attrs={'placeholder': 'Work#'}))
+    extra_info = forms.CharField(required=False, label="Extra Informaton", widget=forms.Textarea, initial = 'Informaton about your family/any known personalities from your family') 
+
+    dob = forms.DateTimeField(
+                label="Date & Time of Birth", 
+                input_formats=settings.DATETIME_INPUT_FORMATS,
+                required=True,
+                widget=forms.widgets.DateTimeInput(format="%d-%b-%Y %H:%M"))
+
+    #dob = forms.DateTimeField(
+    #            label="Date & Time of Birth",
+    #            input_formats=settings.DATETIME_INPUT_FORMATS,
+    #            required=True,
+    #            widget=DateTimePicker(options={"format": "DD-MMM-YYYY HH:mm",
+    #                                   "pickSeconds": False, "pickTime": True, "ignoreReadonly": True}))
+
+    class Meta:         
+        model = Person
+        fields = ('first_name', 'last_name', 'nick_name', 'family_name', 'father_name', 
+                    'mother_name', 'gothram','star', 'gender', 'blood_group', 'dob', 
+                    'email', 'alternate_email', 'primary_phone', 'secondary_phone1', 'extra_info',)
+
+    def __init__(self, *args, **kwargs):
+        initial = kwargs.pop('initial', None)
+        if initial is not None:
+            self.contact_id = initial.pop('contact_id', None)
+        super(PersonForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+        self.helper.form_class = 'form-horizontal well'
+        self.helper.label_class = 'col-md-4'
+        self.helper.field_class = 'col-md-8'
+        self.helper.form_tag = False
+       
+        #self.helper.layout.append(
+            #FormActions(
+                #Submit('save', 'Save', css_class='btn-primary'),
+                #Submit('cancel', 'Cancel'),
+           #)
+        #)        
+
+    def clean_blood_group(self):
+        if self.cleaned_data.get('blood_group', 'Select Blood Group') == 'Sbg':
+            raise ValidationError('Please Select Blood Group')
+        return self.cleaned_data.get('blood_group', 'Select Blood Group')
+
+    def clean_gothram(self):
+        if self.cleaned_data.get('gothram', 'Select Gothra') == 'Sgothra':
+            raise ValidationError('Please Select Gothra')
+        return self.cleaned_data.get('gothram', 'Select Gothra')
+
+    def clean_family_name(self):
+        if self.cleaned_data.get('family_name', 'Select Family Name') == 'Sfn':
+            raise ValidationError('Please Select Family Name')
+        return self.cleaned_data.get('family_name', 'Select Family Name')
+
+    def clean_star(self):
+        if self.cleaned_data.get('star', 'Select Nakshatra') == 'Snakshatra':
+            raise ValidationError('Please Select Nakshatra')
+        return self.cleaned_data.get('star', 'Select Nakshatra')
+
+    def clean_gender(self):
+        if self.cleaned_data.get('gender', 'Select Gender') == 'Sgender':
+            raise ValidationError('Please Select Gender')
+        return self.cleaned_data.get('gender', 'Select Gender')
+
+    def clean(self):
+        form_data = self.cleaned_data
+        email = form_data.get('email', '')
+        try:
+            person = Person.objects.get(email=email)
+            if self.contact_id is not None and person.id == int(self.contact_id):
+                return form_data
+            else:
+                raise ValidationError('Email is already registered for another user: ' + person.first_name + ' ' + person.last_name)
+        except Person.DoesNotExist:
+            return form_data
+
+class ContactForm(ModelForm):
+    COUNTRY_CHOICES = (
+        ("Scountry","Select Country"),
+        ('AF','Afghanistan'),
+        ('AX','Aland Islands'),
+        ('AL','Albania'),
+        ('DZ','Algeria'),
+        ('AS','American Samoa'),
+        ('AD','Andorra'),
+        ('AO','Angola'),
+        ('AI','Anguilla'),
+        ('AQ','Antarctica'),
+        ('AG','Antigua and Barbuda'),
+        ('AR','Argentina'),
+        ('AM','Armenia'),
+        ('AW','Aruba'),
+        ('AU','Australia'),
+        ('AT','Austria'),
+        ('AZ','Azerbaijan'),
+        ('BS','Bahamas'),
+        ('BH','Bahrain'),
+        ('BD','Bangladesh'),
+        ('BB','Barbados'),
+        ('BY','Belarus'),
+        ('BE','Belgium'),
+        ('BZ','Belize'),
+        ('BJ','Benin'),
+        ('BM','Bermuda'),
+        ('BT','Bhutan'),
+        ('BO','Bolivia, Plurinational State of'),
+        ('BQ','Bonaire, Sint Eustatius and Saba'),
+        ('BA','Bosnia and Herzegovina'),
+        ('BW','Botswana'),
+        ('BV','Bouvet Island'),
+        ('BR','Brazil'),
+        ('IO','British Indian Ocean Territory'),
+        ('BN','Brunei Darussalam'),
+        ('BG','Bulgaria'),
+        ('BF','Burkina Faso'),
+        ('BI','Burundi'),
+        ('KH','Cambodia'),
+        ('CM','Cameroon'),
+        ('CA','Canada'),
+        ('CV','Cape Verde'),
+        ('KY','Cayman Islands'),
+        ('CF','Central African Republic'),
+        ('TD','Chad'),
+        ('CL','Chile'),
+        ('CN','China'),
+        ('CX','Christmas Island'),
+        ('CC','Cocos (Keeling) Islands'),
+        ('CO','Colombia'),
+        ('KM','Comoros'),
+        ('CG','Congo'),
+        ('CD','Congo, the Democratic Republic of the'),
+        ('CK','Cook Islands'),
+        ('CR','Costa Rica'),
+        ('CI','Côte d&apos;Ivoire'),
+        ('HR','Croatia'),
+        ('CU','Cuba'),
+        ('CW','Curaçao'),
+        ('CY','Cyprus'),
+        ('CZ','Czech Republic'),
+        ('DK','Denmark'),
+        ('DJ','Djibouti'),
+        ('DM','Dominica'),
+        ('DO','Dominican Republic'),
+        ('EC','Ecuador'),
+        ('EG','Egypt'),
+        ('SV','El Salvador'),
+        ('GQ','Equatorial Guinea'),
+        ('ER','Eritrea'),
+        ('EE','Estonia'),
+        ('ET','Ethiopia'),
+        ('FK','Falkland Islands (Malvinas)'),
+        ('FO','Faroe Islands'),
+        ('FJ','Fiji'),
+        ('FI','Finland'),
+        ('FR','France'),
+        ('GF','French Guiana'),
+        ('PF','French Polynesia'),
+        ('TF','French Southern Territories'),
+        ('GA','Gabon'),
+        ('GM','Gambia'),
+        ('GE','Georgia'),
+        ('DE','Germany'),
+        ('GH','Ghana'),
+        ('GI','Gibraltar'),
+        ('GR','Greece'),
+        ('GL','Greenland'),
+        ('GD','Grenada'),
+        ('GP','Guadeloupe'),
+        ('GU','Guam'),
+        ('GT','Guatemala'),
+        ('GG','Guernsey'),
+        ('GN','Guinea'),
+        ('GW','Guinea-Bissau'),
+        ('GY','Guyana'),
+        ('HT','Haiti'),
+        ('HM','Heard Island and McDonald Islands'),
+        ('VA','Holy See (Vatican City State)'),
+        ('HN','Honduras'),
+        ('HK','Hong Kong'),
+        ('HU','Hungary'),
+        ('IS','Iceland'),
+        ('IN','India'),
+        ('ID','Indonesia'),
+        ('IR','Iran, Islamic Republic of'),
+        ('IQ','Iraq'),
+        ('IE','Ireland'),
+        ('IM','Isle of Man'),
+        ('IL','Israel'),
+        ('IT','Italy'),
+        ('JM','Jamaica'),
+        ('JP','Japan'),
+        ('JE','Jersey'),
+        ('JO','Jordan'),
+        ('KZ','Kazakhstan'),
+        ('KE','Kenya'),
+        ('KI','Kiribati'),
+        ('KP','Korea, Democratic People&apos;s Republic of'),
+        ('KR','Korea, Republic of'),
+        ('KW','Kuwait'),
+        ('KG','Kyrgyzstan'),
+        ('LA','Lao People&apos;s Democratic Republic'),
+        ('LV','Latvia'),
+        ('LB','Lebanon'),
+        ('LS','Lesotho'),
+        ('LR','Liberia'),
+        ('LY','Libya'),
+        ('LI','Liechtenstein'),
+        ('LT','Lithuania'),
+        ('LU','Luxembourg'),
+        ('MO','Macao'),
+        ('MK','Macedonia, the former Yugoslav Republic of'),
+        ('MG','Madagascar'),
+        ('MW','Malawi'),
+        ('MY','Malaysia'),
+        ('MV','Maldives'),
+        ('ML','Mali'),
+        ('MT','Malta'),
+        ('MH','Marshall Islands'),
+        ('MQ','Martinique'),
+        ('MR','Mauritania'),
+        ('MU','Mauritius'),
+        ('YT','Mayotte'),
+        ('MX','Mexico'),
+        ('FM','Micronesia, Federated States of'),
+        ('MD','Moldova, Republic of'),
+        ('MC','Monaco'),
+        ('MN','Mongolia'),
+        ('ME','Montenegro'),
+        ('MS','Montserrat'),
+        ('MA','Morocco'),
+        ('MZ','Mozambique'),
+        ('MM','Myanmar'),
+        ('NA','Namibia'),
+        ('NR','Nauru'),
+        ('NP','Nepal'),
+        ('NL','Netherlands'),
+        ('NC','New Caledonia'),
+        ('NZ','New Zealand'),
+        ('NI','Nicaragua'),
+        ('NE','Niger'),
+        ('NG','Nigeria'),
+        ('NU','Niue'),
+        ('NF','Norfolk Island'),
+        ('MP','Northern Mariana Islands'),
+        ('NO','Norway'),
+        ('OM','Oman'),
+        ('PK','Pakistan'),
+        ('PW','Palau'),
+        ('PS','Palestinian Territory, Occupied'),
+        ('PA','Panama'),
+        ('PG','Papua New Guinea'),
+        ('PY','Paraguay'),
+        ('PE','Peru'),
+        ('PH','Philippines'),
+        ('PN','Pitcairn'),
+        ('PL','Poland'),
+        ('PT','Portugal'),
+        ('PR','Puerto Rico'),
+        ('QA','Qatar'),
+        ('RE','Réunion'),
+        ('RO','Romania'),
+        ('RU','Russian Federation'),
+        ('RW','Rwanda'),
+        ('BL','Saint Barthélemy'),
+        ('SH','Saint Helena, Ascension and Tristan da Cunha'),
+        ('KN','Saint Kitts and Nevis'),
+        ('LC','Saint Lucia'),
+        ('MF','Saint Martin (French part)'),
+        ('PM','Saint Pierre and Miquelon'),
+        ('VC','Saint Vincent and the Grenadines'),
+        ('WS','Samoa'),
+        ('SM','San Marino'),
+        ('ST','Sao Tome and Principe'),
+        ('SA','Saudi Arabia'),
+        ('SN','Senegal'),
+        ('RS','Serbia'),
+        ('SC','Seychelles'),
+        ('SL','Sierra Leone'),
+        ('SG','Singapore'),
+        ('SX','Sint Maarten (Dutch part)'),
+        ('SK','Slovakia'),
+        ('SI','Slovenia'),
+        ('SB','Solomon Islands'),
+        ('SO','Somalia'),
+        ('ZA','South Africa'),
+        ('GS','South Georgia and the South Sandwich Islands'),
+        ('SS','South Sudan'),
+        ('ES','Spain'),
+        ('LK','Sri Lanka'),
+        ('SD','Sudan'),
+        ('SR','Suriname'),
+        ('SJ','Svalbard and Jan Mayen'),
+        ('SZ','Swaziland'),
+        ('SE','Sweden'),
+        ('CH','Switzerland'),
+        ('SY','Syrian Arab Republic'),
+        ('TW','Taiwan, Province of China'),
+        ('TJ','Tajikistan'),
+        ('TZ','Tanzania, United Republic of'),
+        ('TH','Thailand'),
+        ('TL','Timor-Leste'),
+        ('TG','Togo'),
+        ('TK','Tokelau'),
+        ('TO','Tonga'),
+        ('TT','Trinidad and Tobago'),
+        ('TN','Tunisia'),
+        ('TR','Turkey'),
+        ('TM','Turkmenistan'),
+        ('TC','Turks and Caicos Islands'),
+        ('TV','Tuvalu'),
+        ('UG','Uganda'),
+        ('UA','Ukraine'),
+        ('AE','United Arab Emirates'),
+        ('GB','United Kingdom'),
+        ('US','United States'),
+        ('UM','United States Minor Outlying Islands'),
+        ('UY','Uruguay'),
+        ('UZ','Uzbekistan'),
+        ('VU','Vanuatu'),
+        ('VE','Venezuela, Bolivarian Republic of'),
+        ('VN','Viet Nam'),
+        ('VG','Virgin Islands, British'),
+        ('VI','Virgin Islands, U.S.'),
+        ('WF','Wallis and Futuna'),
+        ('EH','Western Sahara'),
+        ('YE','Yemen'),
+        ('ZM','Zambia'),
+        ('ZW','Zimbabwe'),
+    )
+
+    address = forms.ModelChoiceField(required=False, queryset=Contact.objects.none(), label="Choose a current address", widget=forms.Select(attrs={'onchange':'fill_address_form();'}))
+    address1 = forms.CharField(required=True, label="Address Line 1", widget=forms.TextInput(attrs={'placeholder': 'Street address, P.O. box'}))
+    address2 = forms.CharField(required=False, label="Address Line 2", widget=forms.TextInput(attrs={'placeholder': 'Flat No/Block No'}))
+    address3 = forms.CharField(required=False, label="Address Line 3", widget=forms.TextInput(attrs={'placeholder': 'Building, floor, etc'}))
+    address4 = forms.CharField(required=False, label="Address Line 4", widget=forms.TextInput(attrs={'placeholder': 'Landmark'}))
+    city = forms.CharField(required=True, label="City/Town", widget=forms.TextInput(attrs={'placeholder': 'City'}))
+    state = forms.CharField(required=True, label="State", widget=forms.TextInput(attrs={'placeholder': 'State'}))
+    zipcode = forms.CharField(required=True, label="Postal/Zip/Pin Code", widget=forms.TextInput(attrs={'placeholder': 'Postal Code or Zip Code or Pin Code'}))
+    country = forms.ChoiceField(choices = COUNTRY_CHOICES, required = True, label = 'Country')
+
+    class Meta:
+        model = Contact
+        fields = ('address', 'address1', 'address2', 'address3', 'address4', 'city', 'state', 'zipcode', 'country',)
+
+    def __init__(self, *args, **kwargs):
+        initial = kwargs.pop('initial', None)
+        super(ContactForm, self).__init__(*args, **kwargs)
+        if initial is not None:
+            person = initial.pop('person', None)
+            #print(person)
+            self.fields["address"].queryset = Contact.objects.filter(user=person)
+        else:
+            self.fields["address"].queryset = Contact.objects.all()
+        self.helper = FormHelper(self)
+        self.helper.form_class = 'form-horizontal well'
+        self.helper.label_class = 'col-md-4'
+        self.helper.field_class = 'col-md-8'
+        self.helper.form_tag = False
+        #self.helper.layout.append(
+            #FormActions(
+                #Submit('save', 'Save', css_class='btn-primary'),
+                #Submit('cancel', 'Cancel'),
+            #)
+        #)
+
+    def clean(self):
+        if self.cleaned_data.get('address') and 'country' in self._errors:
+            del self._errors['country']
+        return self.cleaned_data 
+
+ContactAddressFormSet = inlineformset_factory(Contact, Person,
+        extra=0, min_num=1, fields=('first_name', 'last_name', 'nick_name',
+        'family_name', 'gothram', 'star', 'gender', 'blood_group', 'dob',
+        'email', 'primary_phone', 'secondary_phone1', 'secondary_phone2',
+        'extra_info',) )

@@ -1,0 +1,55 @@
+{% extends 'addressdb/base.html' %}
+
+{% block title %}Welcome | {{ block.super }}{% endblock %}
+
+{% block headline %}<h1><center>Welcome to the Address Database!</center></h1>{% endblock headline %}
+
+{% block content %}
+	<div  class="col-md-8 col-md-offset-2">
+		<div class="panel panel-default">
+			<div class="panel-heading panel-heading-custom">
+				<h2 class="panel-title"><center>List of Contacts</center></h2>
+			</div>		
+		</div>
+		<div class="panel-group" id="accordion">
+			{% for contact in object_list %}
+		    	<div class="panel panel-default">
+		      		<div class="panel-heading panel-heading-custom1">
+		        		<h2 class="panel-title">
+		          			<button type="button" class="btn-primary btn btn-group-lg" data-toggle="collapse" data-target="#{{contact.id}}"> {{ contact }}</button>
+		          			<a href="{% url 'addressdb:edit_contact' contact.id %}" class="btn-primary btn" data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-edit glyphiconpurple"></span></a>
+		          			<a href="{% url 'addressdb:delete_contact' pk=contact.id %}" class="btn-primary btn" data-toggle="tooltip" title="Delete"><span class="glyphicon glyphicon-remove glyphiconred"></span></a>
+		        		</h2>
+		      		</div>
+		      
+		      		<div id="{{contact.id}}" class="panel-collapse collapse">
+		        		<ul class="list-group">
+          					<li class="list-group-item villagefont">First Name: {{ contact.first_name }}</li>
+          					<li class="list-group-item villagefont">Last Name: {{ contact.last_name }}</li>
+          					<li class="list-group-item villagefont">Nick Name: {{ contact.nick_name }}</li>
+          					<li class="list-group-item villagefont">Family Name: {{ contact.family_name }}</li>
+          					<li class="list-group-item villagefont">Gothra: {{ contact.gothram }}</li>
+          					<li class="list-group-item villagefont">Nakshatra: {{ contact.star }}</li>
+          					<li class="list-group-item villagefont">Gender: {{ contact.gender }}</li>
+          					<li class="list-group-item villagefont">Blood Group: {{ contact.blood_group }}</li>
+          					<li class="list-group-item villagefont">Date of Birth: {{ contact.dob }}</li>
+          					<li class="list-group-item villagefont">Email: {{ contact.email }}</li>
+          					<li class="list-group-item villagefont">Primary Phone: {{ contact.primary_phone }}</li>
+          					<li class="list-group-item villagefont">Secondary Phone1: {{ contact.secondary_phone1 }}</li>
+          					<li class="list-group-item villagefont">Secondary Phone2: {{ contact.secondary_phone2 }}</li>
+							<li class="list-group-item villagefont">Address: {{ contact.address }}</li>
+        				</ul>
+		    		</div>
+			{% endfor %}
+				</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block js %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+		    $('[data-toggle="tooltip"]').tooltip();   
+		});
+	</script>
+{% endblock js %}

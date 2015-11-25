@@ -1,0 +1,42 @@
+{% extends 'addressdb/base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+		<h1 class="villagefont">Delete Contact</h1>
+
+		<p class="villagefont">Are you sure you want to delete the contact {{ person }} with the following details?</p>
+
+		<ul class="list-group">
+	        <li class="list-group-item villagefont">First Name: {{ person.first_name }}</li>
+	        <li class="list-group-item villagefont">Last Name: {{ person.last_name }}</li>
+	        <li class="list-group-item villagefont">Nick Name: {{ person.nick_name }}</li>
+	        <li class="list-group-item villagefont">Family Name: {{ person.family_name }}</li>
+	        <li class="list-group-item villagefont">Gothra: {{ person.gothram }}</li>
+	        <li class="list-group-item villagefont">Nakshatra: {{ person.star }}</li>
+	        <li class="list-group-item villagefont">Gender: {{ person.gender }}</li>
+	        <li class="list-group-item villagefont">Blood Group: {{ person.blood_group }}</li>
+	        <li class="list-group-item villagefont">Date of Birth: {{ person.dob }}</li>
+	        <li class="list-group-item villagefont">Email: {{ person.email }}</li>
+	        <li class="list-group-item villagefont">Primary Phone: {{ person.primary_phone }}</li>
+	        <li class="list-group-item villagefont">Secondary Phone1: {{ person.secondary_phone1 }}</li>
+	        <li class="list-group-item villagefont">Secondary Phone2: {{ person.secondary_phone2 }}</li>
+			<li class="list-group-item villagefont">Address: {{ person.address }}</li>
+	    </ul>
+
+		<form action="{% url 'addressdb:delete_contact' pk=person.id %}" method="POST">
+		  {% csrf_token %}
+		  <input type="submit" class="btn btn-primary btnNext" value="Yes, delete." />
+		  <a href="{% url 'addressdb:home' %}" class="btn-primary btn">No, Cancel</a>
+		</form>
+	</div>
+</div>
+
+{% endblock %}
