@@ -170,9 +170,9 @@ class PersonForm(ModelForm):
     email = forms.EmailField(required=True, label="Preferred Email", widget=forms.TextInput(attrs={'placeholder': 'Email Address'}))
     alternate_email = forms.EmailField(required=False, label="Alternate Email", widget=forms.TextInput(attrs={'placeholder': 'Alternate Email Address'}))
     #primary_phone = forms.CharField(required=True, label="Preferred Phone", widget=forms.TextInput(attrs={'placeholder': '+919856745633 (Mobile#)'}))
-    primary_phone = forms.RegexField(regex=r'^\+?1?\d{9,15}$', error_message = ("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."), widget=forms.TextInput(attrs={'placeholder': '+919882675673'}))
+    primary_phone = forms.RegexField(label="Preferred Phone", regex=r'^\+?1?\d{9,15}$', error_message = ("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."), widget=forms.TextInput(attrs={'placeholder': '+919882675673'}))
     #secondary_phone1 = forms.CharField(required=False, label="Alternate Phone", widget=forms.TextInput(attrs={'placeholder': 'Home# - +914912675673'}))
-    secondary_phone1 = forms.RegexField(required=False, regex=r'^\+?1?\d{9,15}$', error_message = ("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."), widget=forms.TextInput(attrs={'placeholder': '+914912675673'}))
+    secondary_phone1 = forms.RegexField(label="Alternate Phone", required=False, regex=r'^\+?1?\d{9,15}$', error_message = ("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."), widget=forms.TextInput(attrs={'placeholder': '+914912675673'}))
     #secondary_phone2 = forms.CharField(required=False, label="Secondary Phone 2", widget=forms.TextInput(attrs={'placeholder': 'Work#'}))
     extra_info = forms.CharField(required=False, label="Extra Informaton", widget=forms.Textarea, initial = 'Informaton about your family/any known personalities from your family') 
 
@@ -214,31 +214,6 @@ class PersonForm(ModelForm):
            #)
         #)        
 
-    def clean_blood_group(self):
-        if self.cleaned_data.get('blood_group', 'Select Blood Group') == 'Sbg':
-            raise ValidationError('Please Select Blood Group')
-        return self.cleaned_data.get('blood_group', 'Select Blood Group')
-
-    def clean_gothram(self):
-        if self.cleaned_data.get('gothram', 'Select Gothra') == 'Sgothra':
-            raise ValidationError('Please Select Gothra')
-        return self.cleaned_data.get('gothram', 'Select Gothra')
-
-    def clean_family_name(self):
-        if self.cleaned_data.get('family_name', 'Select Family Name') == 'Sfn':
-            raise ValidationError('Please Select Family Name')
-        return self.cleaned_data.get('family_name', 'Select Family Name')
-
-    def clean_star(self):
-        if self.cleaned_data.get('star', 'Select Nakshatra') == 'Snakshatra':
-            raise ValidationError('Please Select Nakshatra')
-        return self.cleaned_data.get('star', 'Select Nakshatra')
-
-    def clean_gender(self):
-        if self.cleaned_data.get('gender', 'Select Gender') == 'Sgender':
-            raise ValidationError('Please Select Gender')
-        return self.cleaned_data.get('gender', 'Select Gender')
-
     def clean(self):
         form_data = self.cleaned_data
         email = form_data.get('email', '')
@@ -247,7 +222,7 @@ class PersonForm(ModelForm):
             if self.contact_id is not None and person.id == int(self.contact_id):
                 return form_data
             else:
-                raise ValidationError('Email is already registered for another user: ' + person.first_name + ' ' + person.last_name)
+                raise ValidationError('Primary Email ' + email + ' is already registered by ' + person.user.username + ' for contact: ' + person.first_name + ' ' + person.last_name)
         except Person.DoesNotExist:
             return form_data
 

@@ -61,6 +61,9 @@
     	$("#id_0-blood_group option[value='Sbg']").attr('disabled','disabled');
     	$("#id_0-blood_group option[value='Sbg']").attr('style','display: none;');
 
+    	$("#id_0-gender option[value='Sgender']").attr('disabled','disabled');
+    	$("#id_0-gender option[value='Sgender']").attr('style','display: none;');
+
 		$("#id_1-zipcode, #id_0-primary_phone").keydown(function (e) {
 		    // Allow: backspace, delete, tab, escape, enter and .
 		    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 107, 110, 190]) !== -1 ||
@@ -139,8 +142,6 @@
 		});
 	}
 	$('#id_1-address').trigger('change');
-	$('#id_1-country').trigger('change');
-	
 	$('#id_0-dob').attr('placeholder', 'Select Data & Time of Birth');
 
 	$(function() {

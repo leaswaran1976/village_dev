@@ -175,7 +175,7 @@ body {
     background: #E0E0EA;
     color: #48372F;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size: 18px;
+    font-size: 15px;
 }
 
 h2 {
@@ -184,7 +184,7 @@ h2 {
 
 .villagefont {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size: 15px;
+    font-size: 18px;
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
