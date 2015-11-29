@@ -53,7 +53,7 @@
     	$("#id_0-family_name option[value='Sfn']").attr('style','display: none;');
 
     	$("#id_0-gothram option[value='Sgothra']").attr('disabled','disabled');
-    	$("#id_0-family_name option[value='Sgothra']").attr('style','display: none;');
+    	$("#id_0-gothram option[value='Sgothra']").attr('style','display: none;');
 
     	$("#id_0-star option[value='Snakshatra']").attr('disabled','disabled');
     	$("#id_0-star option[value='Snakshatra']").attr('style','display: none;');
@@ -65,6 +65,7 @@
     	$("#id_0-gender option[value='Sgender']").attr('style','display: none;');
 
 		$("#id_1-zipcode, #id_0-primary_phone").keydown(function (e) {
+			//alert(e.keyCode)
 		    // Allow: backspace, delete, tab, escape, enter and .
 		    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 107, 110, 190]) !== -1 ||
 		    // Allow: Ctrl+A, Command+A
@@ -80,6 +81,10 @@
 		    }
 		});    	
 	});
+
+	if($('#id_1-address').children('option').length < 2) {
+		$('label[for=id_1-address], select#id_1-address').hide();
+	}
 
 	function fill_address_form() {
 		$('#id_1-address').on('change', function () {

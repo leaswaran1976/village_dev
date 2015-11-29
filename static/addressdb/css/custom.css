@@ -1,0 +1,215 @@
+#topbar {
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+    height: 33px;
+    line-height: 33px;
+}
+
+#header {
+    background-color: #67BCDB;
+    vertical-align: middle;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 24px;
+    padding: 20px 0;      
+}
+
+.form-signin
+{
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.form-signin .form-signin-heading, .form-signin .checkbox
+{
+    margin-bottom: 10px;
+}
+.form-signin .checkbox
+{
+    font-weight: normal;
+}
+.form-signin .form-control
+{
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.form-signin .form-control:focus
+{
+    z-index: 2;
+}
+.form-signin input[type="text"]
+{
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.form-signin input[type="password"]
+{
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.account-wall
+{
+    margin-top: 20px;
+    padding: 40px 0px 20px 0px;
+    background-color: #514947;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+.new-account-wall
+{
+    margin-top: 20px;
+    padding: 10px 20px 0px 10px;
+    background-color: #4BAFCD;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+.login-title
+{
+    color: #555;
+    font-size: 22px;
+    font-weight: 400;
+    display: block;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+.profile-img
+{
+    width: 220px;
+    height: 180px;
+    margin: 0 auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;   
+}
+.need-help
+{
+    margin-top: 10px;
+    font-size:14px;
+    color: salmon;
+}
+
+a.need-help:hover {
+    color: #4BAFCD !important;
+}
+
+.new-account
+{
+    display: block;
+    margin-top: 10px;
+}
+
+.input-group-addon {
+    min-width:30px;// if you want width please write here //
+    text-align:left;
+}
+
+img {
+    width: 100%;
+}
+
+body {
+    padding-top: 100px;
+    padding-bottom: 40px;
+}
+
+.sidebar-nav {
+    padding: 9px 0;
+}
+
+@media (max-width: 768px) {
+    .navbar-text.pull-right {
+        float: none;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}   
+
+.navbar-custom {
+    background-color: #514947;
+}
+
+.nav .navbar-nav .navbar-inverse > .active{
+   #color: #22630d;
+   #background-color: #d65c14;
+}
+
+.panel-default > .panel-heading-custom {
+    background: #514947;
+    color: white;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 4px 4px 0px 0px;
+    border-bottom: 1px solid #0074BD;
+}
+
+.panel-default > .panel-heading-custom1 {
+    background: #FFFFFF;
+    color: white;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 4px 4px 0px 0px;
+    border-bottom: 1px solid #0074BD;
+}
+
+.panel-heading h2 {
+    width: 100%;
+    font-size: 14pt;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    text-align: left;
+    color: #FFFFFF;
+    line-height: 1.0;
+    font-weight: normal;
+}
+
+.btn-primary {
+    background: #E0E0EA;
+    color: #48372F;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 15px;
+}
+
+h2 {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+.villagefont {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 16px;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+    background: #E0E0EA;
+    color: #48372F;
+}
+
+.glyphiconpurple {
+    color: #48372F;
+}
+
+.glyphiconred {
+    color: #990000;
+}
+
+.navbar { font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif !important; }
+.navbar-brand { font-weight: 700; font-size: 18px; }
+.navbar-inverse a { color: #F8F8F8 !important; }
+.navbar-inverse a:hover { 
+    background: #E0E0EA !important; 
+    color: #48372F !important;
+}
+.navbar-nav a { font-weight: 400; font-size: 15px; }
+.navbar-inverse li { color: #FEE202 !important; }
+
+.form-horizontal .control-label {
+   text-align:right !important; 
+}

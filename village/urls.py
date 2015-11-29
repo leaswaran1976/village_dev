@@ -19,6 +19,8 @@ from django.views.generic import RedirectView
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
 from addressdb.views import LoginView
+from django.contrib.auth import views as auth_views
+from django.core.urlresolvers import reverse_lazy
 
 urlpatterns = [
  	url(r'^addressdb/', include('addressdb.urls', namespace="addressdb")),
@@ -27,4 +29,20 @@ urlpatterns = [
     url(r'^login/$', LoginView.as_view(), name='login'),
     #url(r'^login/$', 'django.contrib.auth.views.login', {"template_name" : "addressdb/login.html",}, name="login"),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/login'}, name='logout'),
+    url(r'^passwordreset/$', auth_views.password_reset,
+                            {'post_reset_redirect': reverse_lazy('auth_password_reset_done'),
+                             'template_name': 'addressdb/registration/password_reset_form.html'
+                            },
+                            name='auth_password_reset'),
+    url(r'^passwordreset/complete/$', auth_views.password_reset_complete,
+                           {'template_name': 'addressdb/registration/password_reset_complete.html'},
+                           name='auth_password_reset_complete'),
+    url(r'^passwordreset/done/$', auth_views.password_reset_done,
+                           {'template_name': 'addressdb/registration/password_reset_done.html'},
+                           name='auth_password_reset_done'),
+    url(r'^passwordreset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', auth_views.password_reset_confirm,
+                           {'post_reset_redirect': '/passwordreset/complete/',
+                            'template_name': 'addressdb/registration/password_reset_confirm.html'
+                           }, name='password_reset_confirm'),
+    
 ]

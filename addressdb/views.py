@@ -23,7 +23,7 @@ class SignUpView(generic.CreateView):
 
     def form_valid(self, form):
         valid = super(SignUpView, self).form_valid(form)
-        username, password = form.cleaned_data.get('username'), form.cleaned_data.get('password1')
+        username, password = form.cleaned_data.get('email'), form.cleaned_data.get('password1')
         new_user = authenticate(username=username, password=password)
         login(self.request, new_user)
         return valid 
@@ -116,7 +116,7 @@ class ContactAddressWizard(SessionWizardView):
         if 'contact_id' in self.kwargs:
             contact_id = self.kwargs['contact_id']
             person = get_object_or_404(Person, pk=contact_id)
-            #address = person.address
+            address = person.address
 
             if person.user != user:
                 raise HttpResponseForbidden()
@@ -125,17 +125,19 @@ class ContactAddressWizard(SessionWizardView):
                     print(form.cleaned_data)
                     if isinstance(form, ContactForm):
                         address_from_select = form.cleaned_data.get('address')
+                        print(address_from_select)
                         if address_from_select is None:
-                            address = Contact.objects.get_or_create(address1=form.cleaned_data.get('address1'), 
-                                                                         address2=form.cleaned_data.get('address2'),
-                                                                         address3=form.cleaned_data.get('address3'),
-                                                                         address4=form.cleaned_data.get('address4'),
-                                                                         city=form.cleaned_data.get('city'),
-                                                                         state=form.cleaned_data.get('state'),
-                                                                         zipcode=form.cleaned_data.get('zipcode'),
-                                                                         country=form.cleaned_data.get('country'),
-                                                                         user=user)[0]
-
+                            if address_from_select is None:
+                                address.address1 = form.cleaned_data.get('address1')
+                                address.address2 = form.cleaned_data.get('address2')
+                                address.address3 = form.cleaned_data.get('address3')
+                                address.address4 = form.cleaned_data.get('address4')
+                                address.city = form.cleaned_data.get('city')
+                                address.state = form.cleaned_data.get('state')
+                                address.zipcode = form.cleaned_data.get('zipcode')
+                                address.country = form.cleaned_data.get('country')
+                                address.user = user
+                                address = address.save()
                         else:
                             address = Contact.objects.get(pk=address_from_select.id)
                     elif isinstance(form, PersonForm):
@@ -154,8 +156,8 @@ class ContactAddressWizard(SessionWizardView):
                         person.secondary_phone2 = form.cleaned_data.get('secondary_phone2')
                         person.extra_info = form.cleaned_data.get('extra_info')
                         person.user = user
-                person.address = address
-                person.save()
+                        person.address = address
+                        person.save()
         else:
             person_data = {}
             for form in form_list:

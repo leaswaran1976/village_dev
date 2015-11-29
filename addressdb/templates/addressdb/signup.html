@@ -17,7 +17,11 @@
 
 {% block js %}
 <script type="text/javascript">
-	$('.control-label').css({color:'#FEE202'});
-	$('.help-block').css({color:'salmon'});
+	$(document).ready(function() {
+    	$("#id_email").attr('maxlength','30');
+		$('.control-label').css({color:'#FEE202'});
+		$('.help-block').css({color:'salmon'});    	
+    	$('#error_1_id_email').css({color:'red'});  		
+	});
 </script>
 {%endblock %}

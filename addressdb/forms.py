@@ -6,26 +6,49 @@ from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from .models import Person, Contact
+from django.contrib.auth.models import User
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, HTML, Div
 from crispy_forms.bootstrap import FormActions, PrependedText
 
 class RegistrationForm(UserCreationForm):
+    email = forms.EmailField(required=True, label="Email Address", help_text="Required. 30 characters or fewer.", 
+                             widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Please enter a valid email address.'}))
+
+    class Meta:
+        model = User
+        fields = ("email", "password1", "password2")
+
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
-
         self.helper = FormHelper()
         self.helper.form_class = 'form-signin'
         self.helper.layout = Layout(
-            'username',
-            'password1',
-            'password2',
+            PrependedText('email', '<span class="glyphicon glyphicon-user"></span>'),
+            PrependedText('password1', '<span class="glyphicon glyphicon-lock"></span>'),
+            PrependedText('password2', '<span class="glyphicon glyphicon-lock"></span>'),
             FormActions(
                 Submit('register', 'Sign me up!', css_class='btn-primary'),
                 HTML('<a href={% url "addressdb:home" %} class="btn-primary btn">Cancel</a>'),
             )
         )
+
+    def save(self, commit=True):
+        user = super(UserCreationForm, self).save(commit=False)
+        user.username = self.cleaned_data["email"]
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user
+
+    def clean_email(self):
+        username = self.cleaned_data["email"]
+        try:
+            User._default_manager.get(username=username)
+        except User.DoesNotExist:
+            return username
+        raise ValidationError(username + ' is already a registered user. Enter another valid email address.')
 
 class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
@@ -40,7 +63,8 @@ class LoginForm(AuthenticationForm):
             FormActions(
                 Submit('login', 'Login', css_class='btn-lg btn-block'),
             ),
-            HTML('<a href={% url "addressdb:changepassword" %} class="pull-left need-help"><strong>Forgot Password?</strong></a>')
+            HTML('<a href={% url "addressdb:signup" %} class="pull-left need-help"><strong>New User?</strong></a>'),
+            HTML('<a href={% url "auth_password_reset" %} class="pull-right need-help"><strong>Reset Password?</strong></a>')
         )
 
     def clean_remember_me(self):
@@ -113,18 +137,18 @@ class PersonForm(ModelForm):
         ('Mrigashira', 'Mrigashira'),
         ('Mula', 'Mula'),
         ('Punarvasu', 'Punarvasu'),
-        ('Purva ashadha', 'Purva Ashadha'),
-        ('Purva bhadrapada', 'Purva Bhadrapada'),
-        ('Purva phalguni', 'Purva Phalguni'),
+        ('Purva Ashadha', 'Purva Ashadha'),
+        ('Purva Ahadrapada', 'Purva Bhadrapada'),
+        ('Purva Phalguni', 'Purva Phalguni'),
         ('Pushya', 'Pushya'),
         ('Revati', 'Revati'),
         ('Rohini', 'Rohini'),
         ('Shatabhishak', 'Shatabhishak'),
         ('Shravana', 'Shravana'),
         ('Swati', 'Swati'),
-        ('Uttara ashadha', 'Uttara Ashadha'),
-        ('Uttara bhadrapada', 'Uttara Bhadrapada'),
-        ('Uttara phalguni', 'Uttara Phalguni'),
+        ('Uttara Ashadha', 'Uttara Ashadha'),
+        ('Uttara Bhadrapada', 'Uttara Bhadrapada'),
+        ('Uttara Phalguni', 'Uttara Phalguni'),
         ('Vishaka', 'Vishaka'),
         ('NA', 'Not Available'),
     )
@@ -149,9 +173,10 @@ class PersonForm(ModelForm):
         ('Essuatthan', 'Essuatthan'),
         ('Jadavallabhar', 'Jadavallabhar'),
         ('Kilimangalam', 'Kilimangalam'),
-        ('Maanupattar', 'Maanu Pattar'),
-        ('Neelupattar', 'Neelu Pattar'),
-        ('Seshanpattar', 'Seshanpattar'),
+        ('Maanu Pattar', 'Maanu Pattar'),
+        ('Neelu Pattar', 'Neelu Pattar'),
+        ('Seshan Pattar', 'Seshan Pattar'),
+        ('Sivaraman Pattar', 'Sivaraman Pattar'),
         ('Vaadhyaar', 'Vaadhyaar'),
         ('NA', 'Not Available'),
     )
@@ -169,12 +194,12 @@ class PersonForm(ModelForm):
     blood_group = forms.ChoiceField(choices = BLOOD_GROUP_CHOICES, required=True, label="Blood Group")
     email = forms.EmailField(required=True, label="Preferred Email", widget=forms.TextInput(attrs={'placeholder': 'Email Address'}))
     alternate_email = forms.EmailField(required=False, label="Alternate Email", widget=forms.TextInput(attrs={'placeholder': 'Alternate Email Address'}))
-    #primary_phone = forms.CharField(required=True, label="Preferred Phone", widget=forms.TextInput(attrs={'placeholder': '+919856745633 (Mobile#)'}))
-    primary_phone = forms.RegexField(label="Preferred Phone", regex=r'^\+?1?\d{9,15}$', error_message = ("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."), widget=forms.TextInput(attrs={'placeholder': '+919882675673'}))
-    #secondary_phone1 = forms.CharField(required=False, label="Alternate Phone", widget=forms.TextInput(attrs={'placeholder': 'Home# - +914912675673'}))
-    secondary_phone1 = forms.RegexField(label="Alternate Phone", required=False, regex=r'^\+?1?\d{9,15}$', error_message = ("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."), widget=forms.TextInput(attrs={'placeholder': '+914912675673'}))
+    #primary_phone = forms.CharField(required=True, label="Preferred Phone", widget=forms.TextInput(attrs={'placeholder': '919856745633 (Mobile#)'}))
+    primary_phone = forms.RegexField(label="Preferred Phone", regex=r'^\+?1?\d{9,15}$', error_message = ("Phone number must be entered in the format: '999999999'. Up to 15 digits allowed."), widget=forms.TextInput(attrs={'placeholder': '+919882675673'}))
+    #secondary_phone1 = forms.CharField(required=False, label="Alternate Phone", widget=forms.TextInput(attrs={'placeholder': '914912675673 (Home#)'}))
+    secondary_phone1 = forms.RegexField(label="Alternate Phone", required=False, regex=r'^\+?1?\d{9,15}$', error_message = ("Phone number must be entered in the format: '999999999'. Up to 15 digits allowed."), widget=forms.TextInput(attrs={'placeholder': '+914912675673'}))
     #secondary_phone2 = forms.CharField(required=False, label="Secondary Phone 2", widget=forms.TextInput(attrs={'placeholder': 'Work#'}))
-    extra_info = forms.CharField(required=False, label="Extra Informaton", widget=forms.Textarea, initial = 'Informaton about your family/any known personalities from your family') 
+    extra_info = forms.CharField(required=False, label="Extra Informaton", widget=forms.Textarea(attrs={'placeholder': 'Informaton about your family/any known personalities from your family'})) 
 
     dob = forms.DateTimeField(
                 label="Date & Time of Birth", 

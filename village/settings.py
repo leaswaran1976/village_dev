@@ -35,14 +35,16 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',    
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #third party apps
     'crispy_forms',
-    'bootstrap3_datetime',
+    #'bootstrap3_datetime',
     'formtools',
     #'phonenumber_field',
-    #custom apps
+    'registration',
+    #my apps
     'addressdb',
 )
 
@@ -114,6 +116,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+#Crispy Form Setting
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 DATETIME_INPUT_FORMATS = [
@@ -129,3 +132,16 @@ LOGIN_REDIRECT_URL = reverse_lazy('addressdb:home')
 LOGIN_URL = '/login/'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+
+#Registration Redux
+ACCOUNT_ACTIVATION_DAYS = 7
+SITE_ID=1
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'nuranivillage@gmail.com'
+EMAIL_HOST_PASSWORD = 'CanUf1ndm3'
+ 
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER

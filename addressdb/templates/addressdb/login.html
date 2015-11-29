@@ -21,6 +21,11 @@
 
 {% block js %}
 <script type="text/javascript">
-	$('.control-label').css({color:'#FEE202'});
+	$(document).ready(function() {
+    	$("#id_username").attr('maxlength','30');
+    	$('#id_username').attr('placeholder', 'Registered Email Address');
+    	$('.control-label').css({color:'#FEE202'});
+	});
+	
 </script>
 {%endblock %}

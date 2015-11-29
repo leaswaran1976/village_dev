@@ -7,19 +7,19 @@
 {% block content %}
 	<div  class="col-md-8 col-md-offset-2">
 		<div class="panel panel-default">
-			<div class="panel-heading panel-heading-custom">
+			<div class="panel-heading panel-heading-custom clearfix">
 				<h2 class="panel-title"><center>List of Contacts</center></h2>
 			</div>		
 		</div>
 		<div class="panel-group" id="accordion">
 			{% for contact in object_list %}
 		    	<div class="panel panel-default">
-		      		<div class="panel-heading panel-heading-custom1">
-		        		<h2 class="panel-title">
-		          			<button type="button" class="btn-primary btn btn-group-lg" data-toggle="collapse" data-target="#{{contact.id}}"> {{ contact }}</button>
-		          			<a href="{% url 'addressdb:edit_contact' contact.id %}" class="btn-primary btn" data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-edit glyphiconpurple"></span></a>
-		          			<a href="{% url 'addressdb:delete_contact' pk=contact.id %}" class="btn-primary btn" data-toggle="tooltip" title="Delete"><span class="glyphicon glyphicon-remove glyphiconred"></span></a>
-		        		</h2>
+		      		<div class="panel-heading panel-heading-custom1 clearfix">
+		      			<div class="btn-toolbar">
+			      			<a style="margin-bottom:4px;" href="#{{contact.id}}" class="btn btn-primary pull-left" data-toggle="collapse" data-parent="#accordion" title="Click to see details"> {{ contact }} </a>
+		          			<a style="margin-bottom:4px;" href="{% url 'addressdb:edit_contact' contact.id %}" class="btn-primary btn pull-left" data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-edit glyphiconpurple"></span></a>
+		          			<a style="margin-bottom:4px;" href="{% url 'addressdb:delete_contact' pk=contact.id %}" class="btn-primary btn pull-left" data-toggle="tooltip" title="Delete"><span class="glyphicon glyphicon-trash glyphiconred"></span></a>
+	          			</div>
 		      		</div>
 		      
 		      		<div id="{{contact.id}}" class="panel-collapse collapse">
