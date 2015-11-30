@@ -4,6 +4,25 @@
 
 {% block title %}Register | {{ block.super }}{% endblock %}
 
+{% block css %}
+<style type="text/css">
+	.btn-primary {
+	    background: #E0E0EA;
+	    color: #514947;
+	    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	    font-size: 15px;
+	    white-space: normal;
+	    word-wrap:break-word;
+	    font-weight: bold;
+	}
+	.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+    	background: #E0E0EA;
+    	color: #514947;
+    	font-weight: bold;
+	}
+</style>
+{% endblock css %} 
+
 {% block content %}
 <div class="row">
 	<div class="col-md-6 col-md-offset-3">
@@ -19,7 +38,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
     	$("#id_email").attr('maxlength','30');
-		$('.control-label').css({color:'#FEE202'});
+		$('.control-label').css({color:'#E0E0EA'});
 		$('.help-block').css({color:'salmon'});    	
     	$('#error_1_id_email').css({color:'red'});  		
 	});

@@ -1,0 +1,46 @@
+{% extends 'addressdb/base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load i18n %}
+{% block css %}
+<style type="text/css">
+	.error {
+	   color: red;
+	   font-size: 12px;
+	}
+</style>
+{% endblock css %} 
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+		<h1 class="text-center heading-village"><strong>Help us improve</strong></h1>
+		<p class="feedback-font"><strong>It's always a pleasure to hear from you!</strong></p>
+		<p class="feedback-font"> Ask us a question, or tell us what you love or hate about nuranians.com by filling out the below form.. We'll get back to you over email ASAP.</p>
+		<div class="well">
+			<form action="." method="post">
+	 			{% csrf_token %}
+				{{ form|crispy }}
+				<input type="submit" class="btn btn-primary" name="submit" value="{% trans "Send Feedback" %}"/>
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$( document ).ready(function() {
+		 $("label[for='id_name']").text("Name");
+		 $("label[for='id_email']").text("Email");
+		 $("label[for='id_body']").text("Message");
+		 {% if user.is_authenticated %}
+		 	$('#id_email').val('{{ user.username }}');
+		 {% endif %}
+	});
+	$("#feedback_form").validate();
+</script>
+{%endblock %}

@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'formtools',
     #'phonenumber_field',
     'registration',
+    'contact_form',
     #my apps
     'addressdb',
 )
@@ -145,3 +146,9 @@ EMAIL_HOST_PASSWORD = 'CanUf1ndm3'
  
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
+
+ADMINS = (
+    ('Nurani Village', 'nuranivillage@gmail.com'),   # email will be sent to nuranivillage@gmail.com
+)
+
+MANAGERS = ADMINS

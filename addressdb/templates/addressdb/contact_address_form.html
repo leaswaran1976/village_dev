@@ -15,26 +15,20 @@
 				<div class="panel-heading panel-heading-custom">
 					<h2 class="panel-title"> Contact Form - Step {{ wizard.steps.step1 }} of {{ wizard.steps.count}} </h2>
 				</div>
-				<form class="form-horizontal well" enctype="multipart/form-data" action="" method="post">{% csrf_token %}
+				<form class="form-horizontal well" role="form" enctype="multipart/form-data" action="" method="post">{% csrf_token %}
 					{{ wizard.management_form }}
 					<div class="panel-body">
 					    {% crispy wizard.form %}
 					</div>
-					<div class="form-group">
-						<div class="aab controls col-md-4"></div>
-						<div class="controls col-md-8">
-							<a href="{% url 'addressdb:home' %}" class="btn-primary btn">Cancel</a>
-							{% if wizard.steps.prev %}
-								<button class="btn btn-primary btnNext" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "Previous" %}</button>
-							{% endif %}		
-							{% if wizard.steps.step1 == wizard.steps.count %}
-								<input type="submit" class="btn btn-primary btnNext" value="{% trans "Complete" %}"/>
-							{% else %}	
-								<input type="submit" class="btn btn-primary btnNext" value="{% trans "Next" %}"/>
-							{% endif %}
-						</div>
-					</div>
-
+					<a href="{% url 'addressdb:home' %}" class="btn-primary btn">Cancel</a>
+					{% if wizard.steps.prev %}
+						<button class="btn btn-primary btnNext" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "Previous" %}</button>
+					{% endif %}		
+					{% if wizard.steps.step1 == wizard.steps.count %}
+						<input type="submit" class="btn btn-primary btnNext" value="{% trans "Save" %}"/>
+					{% else %}	
+						<input type="submit" class="btn btn-primary btnNext" value="{% trans "Next" %}"/>
+					{% endif %}
 				</form>
 			</div>
 		</div>
@@ -63,6 +57,9 @@
 
     	$("#id_0-gender option[value='Sgender']").attr('disabled','disabled');
     	$("#id_0-gender option[value='Sgender']").attr('style','display: none;');
+
+    	$("#id_0-relation option[value='Srelation']").attr('disabled','disabled');
+    	$("#id_0-relation option[value='Srelation']").attr('style','display: none;');    	
 
 		$("#id_1-zipcode, #id_0-primary_phone").keydown(function (e) {
 			//alert(e.keyCode)

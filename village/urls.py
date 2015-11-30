@@ -44,5 +44,5 @@ urlpatterns = [
                            {'post_reset_redirect': '/passwordreset/complete/',
                             'template_name': 'addressdb/registration/password_reset_confirm.html'
                            }, name='password_reset_confirm'),
-    
+    url(r'^contact/', include('contact_form.urls')),
 ]

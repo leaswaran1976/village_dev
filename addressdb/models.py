@@ -28,6 +28,7 @@ class Person(models.Model):
 	gender = models.CharField(max_length=10)
 	blood_group = models.CharField(max_length=6)
 	dob = models.DateTimeField('Date and Time of Birth')
+	relation = models.CharField(max_length=30, blank=True, null=True)
 	email = models.EmailField(max_length=50)
 	alternate_email = models.EmailField(max_length=50)
 	primary_phone = models.CharField(max_length=20)

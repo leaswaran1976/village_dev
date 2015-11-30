@@ -13,7 +13,7 @@ from crispy_forms.layout import Submit, Layout, HTML, Div
 from crispy_forms.bootstrap import FormActions, PrependedText
 
 class RegistrationForm(UserCreationForm):
-    email = forms.EmailField(required=True, label="Email Address", help_text="Required. 30 characters or fewer.", 
+    email = forms.EmailField(required=True, label="Email ID", help_text="Required. 30 characters or fewer.", 
                              widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Please enter a valid email address.'}))
 
     class Meta:
@@ -22,6 +22,7 @@ class RegistrationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['password2'].label = "Password Confirmation"
         self.helper = FormHelper()
         self.helper.form_class = 'form-signin'
         self.helper.layout = Layout(
@@ -53,6 +54,7 @@ class RegistrationForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
+        self.fields['username'].label = "Email ID"
 
         self.helper = FormHelper()
         self.helper.form_class = 'form-signin'
@@ -123,33 +125,33 @@ class PersonForm(ModelForm):
 
     NAKSHATRA_CHOICES = (
         ('Snakshatra', 'Select Nakshatra'),
-        ('Anurada', 'Anurada'),
-        ('Ardra', 'Ardra'),
-        ('Ashlesha', 'Ashlesha'),
-        ('Ashwini', 'Ashwini'),
-        ('Bharani', 'Bharani'),
-        ('Chitra', 'Chitra'),
-        ('Dhanishta', 'Dhanishta'),
-        ('Hasta', 'Hasta'),
-        ('Jyeshta', 'Jyeshta'),
-        ('Krittika', 'Krittika'),
-        ('Magha', 'Magha'),
-        ('Mrigashira', 'Mrigashira'),
-        ('Mula', 'Mula'),
-        ('Punarvasu', 'Punarvasu'),
-        ('Purva Ashadha', 'Purva Ashadha'),
-        ('Purva Ahadrapada', 'Purva Bhadrapada'),
-        ('Purva Phalguni', 'Purva Phalguni'),
-        ('Pushya', 'Pushya'),
-        ('Revati', 'Revati'),
-        ('Rohini', 'Rohini'),
-        ('Shatabhishak', 'Shatabhishak'),
-        ('Shravana', 'Shravana'),
-        ('Swati', 'Swati'),
-        ('Uttara Ashadha', 'Uttara Ashadha'),
-        ('Uttara Bhadrapada', 'Uttara Bhadrapada'),
-        ('Uttara Phalguni', 'Uttara Phalguni'),
-        ('Vishaka', 'Vishaka'),
+        ('Aayilyam','Aayilyam'),
+        ('Anusham','Anusham'),
+        ('Aswini','Aswini'),
+        ('Avittam','Avittam'),
+        ('Bharani','Bharani'),
+        ('Chathayam/Sadayam','Chathayam/Sadayam'),
+        ('Chithirai','Chithirai'),
+        ('Hastham','Hastham'),
+        ('Karthigai','Karthigai'),
+        ('Jyeshtha/Kettai','Jyeshtha/Kettai'),
+        ('Makam','Makam'),
+        ('Moolam','Moolam'),
+        ('Mrigasheersham/Makeeryam','Mrigasheersham/Makeeryam'),
+        ('Pooraadam','Pooraadam'),
+        ('Pooram','Pooram'),
+        ('Poorattathi','Poorattathi'),
+        ('Poosam/Pooyyam','Poosam/Pooyyam'),
+        ('Punarpoosam/Punartham','Punarpoosam/Punartham'),
+        ('Revathi','Revathi'),
+        ('Rohini','Rohini'),
+        ('Swaathi','Swaathi'),
+        ('Thiruvaathirai','Thiruvaathirai'),
+        ('Thiruvonam','Thiruvonam'),
+        ('Uthiraadam','Uthiraadam'),
+        ('Uthiram','Uthiram'),
+        ('Uthirattathi','Uthirattathi'),
+        ('Visaakam','Visaakam'),
         ('NA', 'Not Available'),
     )
 
@@ -181,6 +183,26 @@ class PersonForm(ModelForm):
         ('NA', 'Not Available'),
     )
 
+    RELATIONSHIP_CHOICES = (
+        ('Srelation', 'Select Relationship'),
+        ('Brother', 'Brother'),
+        ('Daughter', 'Daughter'),
+        ('Father', 'Father'),
+        ('Fiancee', 'Fiancee'),
+        ('Father-in-Law', 'Father-in-Law'),
+        ('GrandFather_Paternal', 'Grand Father (Paternal)'),
+        ('GrandMother_Paternal', 'Grand Mother (Paternal)'),
+        ('GrandFather_Maternal', 'Grand Father (Maternal)'),
+        ('GrandMother_Maternal', 'Grand Mother (Maternal)'),
+        ('Mother', 'Mother'),
+        ('Mother-in-Law', 'Mother-in-Law'),
+        ('Self', 'Self'),
+        ('Son', 'Son'),
+        ('Sister', 'Sister'),
+        ('Spouse', 'Spouse'),
+        ('Others', 'Others'),
+    )
+
     first_name = forms.CharField(required=True, label="First Name", widget=forms.TextInput(attrs={'placeholder': 'First Name'}))
     last_name = forms.CharField(required=True, label="Last Name", widget=forms.TextInput(attrs={'placeholder': 'Last Name'}))
     nick_name = forms.CharField(required=False, label="Nick Name", widget=forms.TextInput(attrs={'placeholder': 'Nick/Pet Name'}))
@@ -192,6 +214,7 @@ class PersonForm(ModelForm):
     star = forms.ChoiceField(choices = NAKSHATRA_CHOICES, required=True, label="Nakshatra")
     gender = forms.ChoiceField(choices = GENDER_CHOICES, required=True, label="Gender")
     blood_group = forms.ChoiceField(choices = BLOOD_GROUP_CHOICES, required=True, label="Blood Group")
+    relation = forms.ChoiceField(choices = RELATIONSHIP_CHOICES, required=True, label="Relationship")
     email = forms.EmailField(required=True, label="Preferred Email", widget=forms.TextInput(attrs={'placeholder': 'Email Address'}))
     alternate_email = forms.EmailField(required=False, label="Alternate Email", widget=forms.TextInput(attrs={'placeholder': 'Alternate Email Address'}))
     #primary_phone = forms.CharField(required=True, label="Preferred Phone", widget=forms.TextInput(attrs={'placeholder': '919856745633 (Mobile#)'}))
@@ -217,7 +240,7 @@ class PersonForm(ModelForm):
     class Meta:         
         model = Person
         fields = ('first_name', 'last_name', 'nick_name', 'family_name', 'father_name', 
-                    'mother_name', 'gothram','star', 'gender', 'blood_group', 'dob', 
+                    'mother_name', 'gothram','star', 'gender', 'blood_group', 'dob', 'relation', 
                     'email', 'alternate_email', 'primary_phone', 'secondary_phone1', 'extra_info',)
 
     def __init__(self, *args, **kwargs):
@@ -227,17 +250,7 @@ class PersonForm(ModelForm):
         super(PersonForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper(self)
-        self.helper.form_class = 'form-horizontal well'
-        self.helper.label_class = 'col-md-4'
-        self.helper.field_class = 'col-md-8'
         self.helper.form_tag = False
-       
-        #self.helper.layout.append(
-            #FormActions(
-                #Submit('save', 'Save', css_class='btn-primary'),
-                #Submit('cancel', 'Cancel'),
-           #)
-        #)        
 
     def clean(self):
         form_data = self.cleaned_data
@@ -522,23 +535,16 @@ class ContactForm(ModelForm):
     def __init__(self, *args, **kwargs):
         initial = kwargs.pop('initial', None)
         super(ContactForm, self).__init__(*args, **kwargs)
+
         if initial is not None:
             person = initial.pop('person', None)
             #print(person)
             self.fields["address"].queryset = Contact.objects.filter(user=person)
         else:
             self.fields["address"].queryset = Contact.objects.all()
+
         self.helper = FormHelper(self)
-        self.helper.form_class = 'form-horizontal well'
-        self.helper.label_class = 'col-md-4'
-        self.helper.field_class = 'col-md-8'
         self.helper.form_tag = False
-        #self.helper.layout.append(
-            #FormActions(
-                #Submit('save', 'Save', css_class='btn-primary'),
-                #Submit('cancel', 'Cancel'),
-            #)
-        #)
 
     def clean(self):
         if self.cleaned_data.get('address') and 'country' in self._errors:
