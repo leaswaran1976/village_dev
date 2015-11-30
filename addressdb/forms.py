@@ -7,6 +7,7 @@ from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from .models import Person, Contact
 from django.contrib.auth.models import User
+from django.core.exceptions import MultipleObjectsReturned
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, HTML, Div
@@ -30,8 +31,8 @@ class RegistrationForm(UserCreationForm):
             PrependedText('password1', '<span class="glyphicon glyphicon-lock"></span>'),
             PrependedText('password2', '<span class="glyphicon glyphicon-lock"></span>'),
             FormActions(
-                Submit('register', 'Sign me up!', css_class='btn-primary'),
-                HTML('<a href={% url "addressdb:home" %} class="btn-primary btn">Cancel</a>'),
+                Submit('register', 'Sign me up!', css_class='btn-primary btn btn-lg'),
+                HTML('<a href={% url "addressdb:home" %} class="btn-primary btn btn-lg">Cancel</a>'),
             )
         )
 
@@ -247,7 +248,9 @@ class PersonForm(ModelForm):
         initial = kwargs.pop('initial', None)
         if initial is not None:
             self.contact_id = initial.pop('contact_id', None)
+            self.user = initial.pop('person', None)
         super(PersonForm, self).__init__(*args, **kwargs)
+        self.fields["email"].initial = self.user.username
 
         self.helper = FormHelper(self)
         self.helper.form_tag = False
@@ -259,10 +262,24 @@ class PersonForm(ModelForm):
             person = Person.objects.get(email=email)
             if self.contact_id is not None and person.id == int(self.contact_id):
                 return form_data
+            elif person.user == self.user:
+                return form_data
             else:
                 raise ValidationError('Primary Email ' + email + ' is already registered by ' + person.user.username + ' for contact: ' + person.first_name + ' ' + person.last_name)
         except Person.DoesNotExist:
             return form_data
+        except MultipleObjectsReturned:
+            persons = Person.objects.filter(email=email)
+            for person in persons:
+                if person.user == self.user:
+                    continue
+                elif self.contact_id is not None and person.id == int(self.contact_id):
+                    continue
+                else:
+                    raise ValidationError('Primary Email ' + email + ' is already registered by ' + person.user.username + ' for contact: ' + person.first_name + ' ' + person.last_name)
+            return form_data
+                    
+
 
 class ContactForm(ModelForm):
     COUNTRY_CHOICES = (

@@ -20,14 +20,14 @@
 					<div class="panel-body">
 					    {% crispy wizard.form %}
 					</div>
-					<a href="{% url 'addressdb:home' %}" class="btn-primary btn">Cancel</a>
+					<a href="{% url 'addressdb:home' %}" class="btn-primary btn btn-lg">Cancel</a>
 					{% if wizard.steps.prev %}
-						<button class="btn btn-primary btnNext" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "Previous" %}</button>
+						<button class="btn btn-primary btnNext btn-lg" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "Previous" %}</button>
 					{% endif %}		
 					{% if wizard.steps.step1 == wizard.steps.count %}
-						<input type="submit" class="btn btn-primary btnNext" value="{% trans "Save" %}"/>
+						<input type="submit" class="btn btn-primary btnNext btn-lg" value="{% trans "Save" %}"/>
 					{% else %}	
-						<input type="submit" class="btn btn-primary btnNext" value="{% trans "Next" %}"/>
+						<input type="submit" class="btn btn-primary btnNext btn-lg" value="{% trans "Next" %}"/>
 					{% endif %}
 				</form>
 			</div>

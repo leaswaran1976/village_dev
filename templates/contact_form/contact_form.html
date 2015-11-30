@@ -16,14 +16,13 @@
 {% block content %}
 <div class="row">
 	<div class="col-md-8 col-md-offset-2">
-		<h1 class="text-center heading-village"><strong>Help us improve</strong></h1>
+		<h1 class="text-center heading-village"><strong>How we may help you?</strong></h1>
 		<p class="feedback-font"><strong>It's always a pleasure to hear from you!</strong></p>
-		<p class="feedback-font"> Ask us a question, or tell us what you love or hate about nuranians.com by filling out the below form.. We'll get back to you over email ASAP.</p>
 		<div class="well">
 			<form action="." method="post">
 	 			{% csrf_token %}
 				{{ form|crispy }}
-				<input type="submit" class="btn btn-primary" name="submit" value="{% trans "Send Feedback" %}"/>
+				<input type="submit" class="btn btn-primary btn-lg" name="submit" value="{% trans "Submit" %}"/>
 			</form>
 		</div>
 	</div>
