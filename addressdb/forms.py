@@ -55,7 +55,8 @@ class RegistrationForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
-        self.fields['username'].label = "Email ID"
+        self.fields['username'].label = ""
+        self.fields['password'].label = ""
 
         self.helper = FormHelper()
         self.helper.form_class = 'form-signin'

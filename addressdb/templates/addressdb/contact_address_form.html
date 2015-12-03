@@ -1,167 +1,226 @@
-{% extends 'addressdb/base.html' %}
-{% load crispy_forms_tags %}
+<!DOCTYPE html>
 {% load staticfiles %}
+{% load crispy_forms_tags %}
 {% load i18n %}
+<html lang="en">
+<head>
+    <title>{% block title %}Village Site{% endblock title %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'addressdb/css/jquery-ui-timepicker-addon.min.css' %}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="{% static 'addressdb/js/jquery-ui-timepicker-addon.min.js' %}"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="{% static 'addressdb/js/jquery.validate.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'addressdb/css/custom.css' %}"/>
+    {% block css %}
+	    <style type="text/css">
+			.error {
+			   color: red;
+			   font-size: 12px;
+			}
+		</style>
 
-{% block head %}
-{{ wizard.form.media }}
-{% endblock %}
+    {% endblock css %} 
+    {% block head %}{% endblock head %}
+</head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top navbar-custom">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{% url 'addressdb:home' %}"><img style="max-width:150px; max-height=100px;display: inline-block;" src="{% static 'addressdb/images/sastha.png' %}" alt=""/></a>
+                </div>
 
-{% block content %}
+                <div class="navbar-collapse collapse navbar-right">
+                    <ul class="nav navbar-nav" id="nav">
+                        {% if user.is_authenticated %}
+                            <li class="username"><strong>Welcome, {{ user.username }}!</strong></li>
+                        {% endif %}
+                        <li><a href="{% url 'addressdb:home' %}"><strong>Home</strong></a></li>
+                        {% if user.is_authenticated %}
+                            <li id="add_contact" class="active"><a href="{% url 'addressdb:add_contact' %}"><i class="fa fa-user-plus"></i><strong> Add Member </strong></a></li>
+                            <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> <strong>Logout</strong></a></li>
+                        {% endif %}
+                        <li id="contact_us"><a href="{% url 'contact_form' %}"><span class="glyphicon glyphicon-envelope"></span> <strong>Contact Us</strong></a></li>
+                    </ul>
 
-<div class="row">
-	<div class="col-md-8 col-md-offset-2">
-			<div class="panel panel-default">
-				<div class="panel-heading panel-heading-custom">
-					<h2 class="panel-title"> Contact Form - Step {{ wizard.steps.step1 }} of {{ wizard.steps.count}} </h2>
-				</div>
-				<form class="form-horizontal well" role="form" enctype="multipart/form-data" action="" method="post">{% csrf_token %}
-					{{ wizard.management_form }}
-					<div class="panel-body">
-					    {% crispy wizard.form %}
+                    
+                </div>
+            </div>
+        </div>
+
+		<div class="container vertical-center">
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2">
+						<div class="panel panel-default">
+							<div class="panel-heading panel-heading-custom">
+								<h2 class="panel-title"> Contact Form - Step {{ wizard.steps.step1 }} of {{ wizard.steps.count}} </h2>
+							</div>
+							<form class="form-horizontal well" role="form" enctype="multipart/form-data" action="" method="post">{% csrf_token %}
+								{{ wizard.management_form }}
+								<div class="panel-body">
+								    {% crispy wizard.form %}
+								</div>
+								<a href="{% url 'addressdb:home' %}" class="btn-primary btn btn-lg">Cancel</a>
+								{% if wizard.steps.prev %}
+									<button class="btn btn-primary btnNext btn-lg" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "Previous" %}</button>
+								{% endif %}		
+								{% if wizard.steps.step1 == wizard.steps.count %}
+									<input type="submit" class="btn btn-primary btnNext btn-lg" value="{% trans "Save" %}"/>
+								{% else %}	
+									<input type="submit" class="btn btn-primary btnNext btn-lg" value="{% trans "Next" %}"/>
+								{% endif %}
+							</form>
+						</div>
 					</div>
-					<a href="{% url 'addressdb:home' %}" class="btn-primary btn btn-lg">Cancel</a>
-					{% if wizard.steps.prev %}
-						<button class="btn btn-primary btnNext btn-lg" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "Previous" %}</button>
-					{% endif %}		
-					{% if wizard.steps.step1 == wizard.steps.count %}
-						<input type="submit" class="btn btn-primary btnNext btn-lg" value="{% trans "Save" %}"/>
-					{% else %}	
-						<input type="submit" class="btn btn-primary btnNext btn-lg" value="{% trans "Next" %}"/>
-					{% endif %}
-				</form>
+				</div>
 			</div>
 		</div>
-	</div>
-</div>
 
-{% endblock %}
+		<script type="text/javascript">
+		    $( document ).ready(function() {
+		    	$("#id_1-country option[value='Scountry']").attr('disabled','disabled');
+		    	$("#id_1-country option[value='Scountry']").attr('style','display: none;');
 
-{% block js %}
-<script type="text/javascript">
-    $( document ).ready(function() {
-    	$("#id_1-country option[value='Scountry']").attr('disabled','disabled');
-    	$("#id_1-country option[value='Scountry']").attr('style','display: none;');
+		    	$("#id_0-family_name option[value='Sfn']").attr('disabled','disabled');
+		    	$("#id_0-family_name option[value='Sfn']").attr('style','display: none;');
 
-    	$("#id_0-family_name option[value='Sfn']").attr('disabled','disabled');
-    	$("#id_0-family_name option[value='Sfn']").attr('style','display: none;');
+		    	$("#id_0-gothram option[value='Sgothra']").attr('disabled','disabled');
+		    	$("#id_0-gothram option[value='Sgothra']").attr('style','display: none;');
 
-    	$("#id_0-gothram option[value='Sgothra']").attr('disabled','disabled');
-    	$("#id_0-gothram option[value='Sgothra']").attr('style','display: none;');
+		    	$("#id_0-star option[value='Snakshatra']").attr('disabled','disabled');
+		    	$("#id_0-star option[value='Snakshatra']").attr('style','display: none;');
 
-    	$("#id_0-star option[value='Snakshatra']").attr('disabled','disabled');
-    	$("#id_0-star option[value='Snakshatra']").attr('style','display: none;');
+		    	$("#id_0-blood_group option[value='Sbg']").attr('disabled','disabled');
+		    	$("#id_0-blood_group option[value='Sbg']").attr('style','display: none;');
 
-    	$("#id_0-blood_group option[value='Sbg']").attr('disabled','disabled');
-    	$("#id_0-blood_group option[value='Sbg']").attr('style','display: none;');
+		    	$("#id_0-gender option[value='Sgender']").attr('disabled','disabled');
+		    	$("#id_0-gender option[value='Sgender']").attr('style','display: none;');
 
-    	$("#id_0-gender option[value='Sgender']").attr('disabled','disabled');
-    	$("#id_0-gender option[value='Sgender']").attr('style','display: none;');
+		    	$("#id_0-relation option[value='Srelation']").attr('disabled','disabled');
+		    	$("#id_0-relation option[value='Srelation']").attr('style','display: none;');    	
 
-    	$("#id_0-relation option[value='Srelation']").attr('disabled','disabled');
-    	$("#id_0-relation option[value='Srelation']").attr('style','display: none;');    	
+				$("#id_1-zipcode, #id_0-primary_phone").keydown(function (e) {
+					//alert(e.keyCode)
+				    // Allow: backspace, delete, tab, escape, enter and .
+				    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 107, 110, 190]) !== -1 ||
+				    // Allow: Ctrl+A, Command+A
+				    	(e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) || 
+				        // Allow: home, end, left, right, down, up
+				        (e.keyCode >= 35 && e.keyCode <= 40)) {
+				        // let it happen, don't do anything
+				        	return;
+				    }
+				    // Ensure that it is a number and stop the keypress
+				    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+				    	e.preventDefault();
+				    }
+				}); 
 
-		$("#id_1-zipcode, #id_0-primary_phone").keydown(function (e) {
-			//alert(e.keyCode)
-		    // Allow: backspace, delete, tab, escape, enter and .
-		    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 107, 110, 190]) !== -1 ||
-		    // Allow: Ctrl+A, Command+A
-		    	(e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) || 
-		        // Allow: home, end, left, right, down, up
-		        (e.keyCode >= 35 && e.keyCode <= 40)) {
-		        // let it happen, don't do anything
-		        	return;
-		    }
-		    // Ensure that it is a number and stop the keypress
-		    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-		    	e.preventDefault();
-		    }
-		});    	
-	});
+				$("#nav li a").on("click", function(){    
+		        	$("#nav li").removeClass("active"); //Remove any previously "active" li
+		        	$(this).closest("li").addClass("active"); //Set click li as active
+		    	}); 
+			});
 
-	if($('#id_1-address').children('option').length < 2) {
-		$('label[for=id_1-address], select#id_1-address').hide();
-	}
-
-	function fill_address_form() {
-		$('#id_1-address').on('change', function () {
-			if($('#id_1-address').val() != '') {
-				$('#id_1-address1').val("Not Required");
-				$('#id_1-address1').attr('readonly', true);
-
-				$('#id_1-address2').val("Not Required");
-				$('#id_1-address2').attr('readonly', true);
-
-				$('#id_1-address3').val("Not Required");
-				$('#id_1-address3').attr('readonly', true);
-
-				$('#id_1-address4').val("Not Required");
-				$('#id_1-address4').attr('readonly', true);
-
-				$('#id_1-city').val("Not Required");
-				$('#id_1-city').attr('readonly', true);
-				
-				$('#id_1-state').val("Not Required");
-				$('#id_1-state').attr('readonly', true);
-				
-				$('#id_1-zipcode').val("Not Required");
-				$('#id_1-zipcode').attr('readonly', true);
-
-				$('#id_1-country').prop('disabled', true);
-				$("#id_1-country").val("Scountry");
-			} else {
-				$('#id_1-address1').attr('readonly', false);
-				$('#id_1-address1').val("");
-				$('#id_1-address1').attr('placeholder', 'Street address, P.O. box');
-
-				$('#id_1-address2').val("");
-				$('#id_1-address2').attr('readonly', false);
-				$('#id_1-address2').attr('placeholder', 'Flat No/Block No');
-
-				$('#id_1-address3').val("");
-				$('#id_1-address3').attr('readonly', false);
-				$('#id_1-address3').attr('placeholder', 'Building, floor etc');
-
-				$('#id_1-address4').val("");
-				$('#id_1-address4').attr('readonly', false);	
-				$('#id_1-address4').attr('placeholder', 'Landmark');			
-
-				$('#id_1-city').val("");
-				$('#id_1-city').attr('readonly', false);
-				$('#id_1-city').attr('placeholder', 'City');
-				
-				$('#id_1-state').val("");
-				$('#id_1-state').attr('readonly', false);
-				$('#id_1-state').attr('placeholder', 'State');
-				
-				$('#id_1-zipcode').val("");
-				$('#id_1-zipcode').attr('readonly', false);
-				$('#id_1-zipcode').attr('placeholder', 'ZipCode');
-
-				$('#id_1-country').prop('disabled', false);
-				$("#id_1-country").val("Scountry");
+			if($('#id_1-address').children('option').length < 2) {
+				$('label[for=id_1-address], select#id_1-address').hide();
 			}
-		});
-	}
-	$('#id_1-address').trigger('change');
-	$('#id_0-dob').attr('placeholder', 'Select Data & Time of Birth');
-	$('#id_0-dob').attr('readonly', true);
 
-	$(function() {
-        $( "#id_0-dob" ).datetimepicker({
-      		changeMonth: true,
-      		changeYear: true,
-      		yearRange: "1925:2050",
-      		maxDate: "-1",
-      		showButtonPanel: true,
-      		dateFormat: "dd-M-yy",
-      		onChangeMonthYear: function(y, m, i) {
-                var d = i.selectedDay;
-                $(this).datetimepicker('setDate', new Date(y, m - 1, d));
-            },
-            controlType: 'select',
-			timeFormat: 'HH:mm'
-    	});
-    });
-</script>
-{% endblock %}
+			function fill_address_form() {
+				$('#id_1-address').on('change', function () {
+					if($('#id_1-address').val() != '') {
+						$('#id_1-address1').val("Not Required");
+						$('#id_1-address1').attr('readonly', true);
+
+						$('#id_1-address2').val("Not Required");
+						$('#id_1-address2').attr('readonly', true);
+
+						$('#id_1-address3').val("Not Required");
+						$('#id_1-address3').attr('readonly', true);
+
+						$('#id_1-address4').val("Not Required");
+						$('#id_1-address4').attr('readonly', true);
+
+						$('#id_1-city').val("Not Required");
+						$('#id_1-city').attr('readonly', true);
+						
+						$('#id_1-state').val("Not Required");
+						$('#id_1-state').attr('readonly', true);
+						
+						$('#id_1-zipcode').val("Not Required");
+						$('#id_1-zipcode').attr('readonly', true);
+
+						$('#id_1-country').prop('disabled', true);
+						$("#id_1-country").val("Scountry");
+					} else {
+						$('#id_1-address1').attr('readonly', false);
+						$('#id_1-address1').val("");
+						$('#id_1-address1').attr('placeholder', 'Street address, P.O. box');
+
+						$('#id_1-address2').val("");
+						$('#id_1-address2').attr('readonly', false);
+						$('#id_1-address2').attr('placeholder', 'Flat No/Block No');
+
+						$('#id_1-address3').val("");
+						$('#id_1-address3').attr('readonly', false);
+						$('#id_1-address3').attr('placeholder', 'Building, floor etc');
+
+						$('#id_1-address4').val("");
+						$('#id_1-address4').attr('readonly', false);	
+						$('#id_1-address4').attr('placeholder', 'Landmark');			
+
+						$('#id_1-city').val("");
+						$('#id_1-city').attr('readonly', false);
+						$('#id_1-city').attr('placeholder', 'City');
+						
+						$('#id_1-state').val("");
+						$('#id_1-state').attr('readonly', false);
+						$('#id_1-state').attr('placeholder', 'State');
+						
+						$('#id_1-zipcode').val("");
+						$('#id_1-zipcode').attr('readonly', false);
+						$('#id_1-zipcode').attr('placeholder', 'ZipCode');
+
+						$('#id_1-country').prop('disabled', false);
+						$("#id_1-country").val("Scountry");
+					}
+				});
+			}
+			$('#id_1-address').trigger('change');
+			$('#id_0-dob').attr('placeholder', 'Select Data & Time of Birth');
+			$('#id_0-dob').attr('readonly', true);
+
+			$(function() {
+		        $( "#id_0-dob" ).datetimepicker({
+		      		changeMonth: true,
+		      		changeYear: true,
+		      		yearRange: "1925:2050",
+		      		maxDate: "-1",
+		      		showButtonPanel: true,
+		      		dateFormat: "dd-M-yy",
+		      		onChangeMonthYear: function(y, m, i) {
+		                var d = i.selectedDay;
+		                $(this).datetimepicker('setDate', new Date(y, m - 1, d));
+		            },
+		            controlType: 'select',
+					timeFormat: 'HH:mm'
+		    	});
+		    });
+
+		    $(function() {
+		         
+		    });
+		</script>
+	</body>
+</html>

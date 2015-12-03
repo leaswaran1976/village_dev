@@ -1,19 +1,74 @@
-{% extends 'addressdb/base.html' %}
-{% load crispy_forms_tags %}
+<!DOCTYPE html>
 {% load staticfiles %}
+{% load crispy_forms_tags %}
 {% load i18n %}
+<html lang="en">
+<head>
+    <title>{% block title %}Village Site{% endblock title %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'addressdb/css/jquery-ui-timepicker-addon.min.css' %}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="{% static 'addressdb/js/jquery-ui-timepicker-addon.min.js' %}"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="{% static 'addressdb/js/jquery.validate.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'addressdb/css/custom.css' %}"/>
+    {% block css %}
+	    <style type="text/css">
+			.error {
+			   color: red;
+			   font-size: 12px;
+			}
+		</style>
 
-{% block head %}
-{% endblock %}
+    {% endblock css %} 
+    {% block head %}{% endblock head %}
+</head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top navbar-custom">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{% url 'addressdb:home' %}"><img style="max-width:150px; max-height=100px;display: inline-block;" src="{% static 'addressdb/images/sastha.png' %}" alt=""/></a>
+                </div>
 
-{% block content %}
-<div class="row">
-	<div class="col-md-6 col-md-offset-3">
-		<div class="account-wall" align="center">
-			<font color="#FEE202" size="10px"><strong>Thanks.</strong></font>
-			<p class="villagefont"><strong><font color="#E0E0EA">Your message was sent successfully and we appreciate you contacting us. We will be in touch soon.</font></strong></p>
+                <div class="navbar-collapse collapse navbar-right">
+                    <ul class="nav navbar-nav" id="nav">
+                        {% if user.is_authenticated %}
+                            <li class="username"><strong>Welcome, {{ user.username }}!</strong></li>
+                        {% endif %}
+                        <li><a href="{% url 'addressdb:home' %}"><strong>Home</strong></a></li>
+                        {% if user.is_authenticated %}
+                            <li id="add_contact"><a href="{% url 'addressdb:add_contact' %}"><i class="fa fa-user-plus"></i><strong> Add Member </strong></a></li>
+                            <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> <strong>Logout</strong></a></li>
+                        {% endif %}
+                        <li id="contact_us" class="active"><a href="{% url 'contact_form' %}"><span class="glyphicon glyphicon-envelope"></span> <strong>Contact Us</strong></a></li>
+                    </ul>
+
+                    
+                </div>
+            </div>
+        </div>
+
+		<div class="container vertical-center">
+			<div class="row">
+				<div class="col-md-6 col-md-offset-3">
+					<div class="account-wall" align="center">
+						<font color="#FEE202" size="10px"><strong>Thanks.</strong></font>
+						<p><strong><font color="#fff" size="4px">Your message was sent successfully and we appreciate you contacting us. We will be in touch soon.</font></strong></p>
+					</div>
+					
+				</div>
+			</div>
 		</div>
-		
-	</div>
-</div>
-{% endblock %}
+	</body>
+</html>

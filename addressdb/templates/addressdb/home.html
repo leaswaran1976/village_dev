@@ -5,7 +5,7 @@
 {% block headline %}<h1><center>Welcome to the Address Database!</center></h1>{% endblock headline %}
 
 {% block content %}
-	<div  class="col-md-8 col-md-offset-2">
+	<div  class="col-md-6 col-md-offset-3">
 		<div class="panel panel-default">
 			<div class="panel-heading panel-heading-custom clearfix">
 				<h2 class="panel-title"><center>List of Contacts</center></h2>
@@ -16,9 +16,9 @@
 		    	<div class="panel panel-default">
 		      		<div class="panel-heading panel-heading-custom1 clearfix">
 		      			<div class="btn-toolbar">
-			      			<a style="margin-bottom:4px;" href="#{{contact.id}}" class="btn btn-primary pull-left" data-toggle="collapse" data-parent="#accordion" title="Click to see details"> {{ contact }} </a>
-		          			<a style="margin-bottom:4px;" href="{% url 'addressdb:edit_contact' contact.id %}" class="btn-primary btn pull-left" data-toggle="tooltip" title="Edit"><span class="glyphicon glyphicon-edit glyphicon-village"></span></a>
-		          			<a style="margin-bottom:4px;" href="{% url 'addressdb:delete_contact' pk=contact.id %}" class="btn-primary btn pull-left" data-toggle="tooltip" title="Delete"><span class="glyphicon glyphicon-trash glyphicon-village"></span></a>
+			      			<a style="margin-bottom:4px;" href="#{{contact.id}}" class="btn btn-primary-contact pull-left" data-toggle="collapse" data-parent="#accordion" title="Click to see details"> {{ contact }} </a>
+		          			<a style="margin-bottom:4px;" href="{% url 'addressdb:edit_contact' contact.id %}" class="btn-primary-contact btn pull-left" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil fa-fw"></i> Edit</a>
+		          			<a style="margin-bottom:4px;" href="{% url 'addressdb:delete_contact' pk=contact.id %}" class="btn-primary-contact btn pull-left" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o fa-fw"></i> Delete</a>
 	          			</div>
 		      		</div>
 		      
@@ -40,8 +40,8 @@
 							<li class="list-group-item villagefont">Address: {{ contact.address }}</li>
         				</ul>
 		    		</div>
+		    	</div>
 			{% endfor %}
-				</div>
 		</div>
 	</div>
 {% endblock %}
