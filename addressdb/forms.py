@@ -210,8 +210,8 @@ class PersonForm(ModelForm):
     nick_name = forms.CharField(required=False, label="Nick Name", widget=forms.TextInput(attrs={'placeholder': 'Nick/Pet Name'}))
     #family_name = forms.CharField(required=False, label="Family Name", widget=forms.TextInput(attrs={'placeholder': 'Kilimangalam, Maanu Pattar, Neelu Pattar, Dixithar'}))
     family_name = forms.ChoiceField(choices = FAMILY_NAME_CHOICES, required = True, label = 'Family Name')
-    father_name = forms.CharField(required=False, label="Father Name", widget=forms.TextInput(attrs={'placeholder': 'Name - Nick Name'}))
-    mother_name = forms.CharField(required=False, label="Mother Name", widget=forms.TextInput(attrs={'placeholder': 'Name - Nick Name'}))
+    father_name = forms.CharField(required=False, label="Father's Name", widget=forms.TextInput(attrs={'placeholder': 'Name - Nick Name'}))
+    mother_name = forms.CharField(required=False, label="Mother's Name", widget=forms.TextInput(attrs={'placeholder': 'Name - Nick Name'}))
     gothram = forms.ChoiceField(choices = GOTHRA_CHOICES, required = True, label = 'Gothra')
     star = forms.ChoiceField(choices = NAKSHATRA_CHOICES, required=True, label="Nakshatra")
     gender = forms.ChoiceField(choices = GENDER_CHOICES, required=True, label="Gender")
@@ -224,7 +224,7 @@ class PersonForm(ModelForm):
     #secondary_phone1 = forms.CharField(required=False, label="Alternate Phone", widget=forms.TextInput(attrs={'placeholder': '914912675673 (Home#)'}))
     secondary_phone1 = forms.RegexField(label="Alternate Phone", required=False, regex=r'^\+?1?\d{9,15}$', error_message = ("Phone number must be entered in the format: '999999999'. Up to 15 digits allowed."), widget=forms.TextInput(attrs={'placeholder': '+914912675673'}))
     #secondary_phone2 = forms.CharField(required=False, label="Secondary Phone 2", widget=forms.TextInput(attrs={'placeholder': 'Work#'}))
-    extra_info = forms.CharField(required=False, label="Extra Informaton", widget=forms.Textarea(attrs={'placeholder': 'Informaton about your family/any known personalities from your family'})) 
+    extra_info = forms.CharField(required=False, label="Additional Informaton", widget=forms.Textarea(attrs={'placeholder': 'Informaton about your family/any known personalities from your family'})) 
 
     dob = forms.DateTimeField(
                 label="Date & Time of Birth", 
