@@ -170,6 +170,19 @@ a:hover, a:focus {
     display: inline-block;
 }
 
+.navbar-nav > li > .dropdown-menu { 
+    background-color: #151515; 
+}
+
+.dropdown-menu li > a {
+    color: #fff;
+}
+
+.dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-submenu:hover > a {
+    background-color: #c52d2f;
+    color: #fff;
+}
+
 .navbar-inverse .navbar-nav > li > a:hover{
     background-color: #c52d2f;
     color: #fff;

@@ -1,0 +1,124 @@
+{% extends 'addressdb/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block title %}All Contacts Report | {{ block.super }}{% endblock %}
+
+{% block css %}
+<style type="text/css">
+	table {
+	    border: 1px solid black;
+	    table-layout: fixed;
+	    width: 200px;
+	}
+	th {
+		background-color: #c52d2f; 
+		color: #fff;
+		overflow: hidden;
+    	width: 100px;		
+	}
+
+	td {
+		word-wrap: break-word;
+		overflow: hidden;
+    	width: 100px;
+	}
+
+	tr {
+		background-color: #fff; 
+	}
+
+	.noBorder {
+	 	border: 0;
+	 	text-align:center;
+	 	background-color: #151515;
+	 	color: #FEE202;
+	 	font-size: 18px;
+	}
+</style>
+{% endblock css %} 
+
+{% block content %}
+
+		<div id="contacts">
+			<h2><center><strong><font color="#003300">All Contacts Report</font></strong></center></h2>
+			<br/><br/>
+			<div class="table-responsive">
+				<table id="contactsdata" class="table table-bordered table-striped" cellspacing="0" width="100%">
+					<thead>
+						<tr>
+							<th class="noBorder villagefont" colspan="15">Total Contacts - {{ object_list|length }}</th>
+						</tr>
+			      		<tr>
+			      			<th>Owner</th>
+			      			<th>Name</th>
+			      			<th>Nick Name</th>
+			        		<th>Family Name</th>
+			        		<th>Relationship</th>
+			        		<th>Gothram</th>
+			        		<th>Nakshatram</th>
+			        		<th>Gender</th>
+			        		<th>Blood Group</th>
+			        		<th>DOB</th>
+			        		<th>Primary <i class="fa fa-envelope"></i></th>
+			        		<th>Secondary <i class="fa fa-envelope"></i></th>
+			        		<th>Primary <i class="fa fa-phone"></i></th>
+			        		<th>Secondary <i class="fa fa-phone"></i></th>
+			        		<th>Address <i class="fa fa-home"></i></th>
+			      		</tr>
+			    	</thead>	
+				
+					<tbody>   
+						{% for contact in object_list %}
+							<tr>
+								<td class="villagefont">{{ contact.user.username }}</td>
+					            <td class="villagefont">{{ contact.first_name }} {{ contact.last_name }}</td>
+					            <td class="villagefont">{{ contact.nick_name }}</td>
+					            <td class="villagefont">{{ contact.family_name }}</td>
+					            <td class="villagefont">{{ contact.relation }}</td>
+					            <td class="villagefont">{{ contact.gothram }}</td>
+					            <td class="villagefont">{{ contact.star }}</td>
+					            <td class="villagefont">{{ contact.gender }}</td>
+					            <td class="villagefont">{{ contact.blood_group }}</td>
+					            <td class="villagefont">{{ contact.dob }}</td>
+					            <td class="villagefont">{{ contact.email }}</td>
+					            <td class="villagefont">{{ contact.alternate_email }}</td>
+					            <td class="villagefont">{{ contact.primary_phone }}</td>
+					            <td class="villagefont">{{ contact.secondary_phone1 }}</td>
+					            <td class="villagefont">{{ contact.address }}</td>
+				    		</tr>
+				    	{% endfor %}
+					</tbody> 				
+				</table>
+			</div>
+		</div>
+{% endblock %}
+
+{% block js %}
+	<script type="text/javascript">
+		$(document).ready(function() {
+    		$('#contactsdata').DataTable({
+    			order: [[ 0, "asc" ]],
+    			paging:   false,
+    			info: false,
+    			lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+    			dom: 'Bfrtip',
+        		buttons: [
+            		'csv', 'excel', 'print'
+        		]
+    		});
+
+    		var loc = window.location.href;
+    		$(".navbar .navbar-nav > li").each(function() {
+      			if (loc.match('/contact_report')) { // software is the name of the page/slug
+        			 $('.nav.navbar-nav > li').removeClass('active');
+        			$('#reports').addClass("active"); 
+        		}
+   			});
+		} );
+
+		$(function() {
+    		$( "#tabs" ).tabs();
+  		});
+	</script>
+{% endblock js %}

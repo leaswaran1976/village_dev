@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse_lazy
 from .models import Person, Contact
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView, TemplateView
 from django.views.generic.edit import FormMixin, ProcessFormView
 from django.shortcuts import render, redirect, get_object_or_404
 from formtools.wizard.views import SessionWizardView
@@ -14,6 +14,7 @@ from django.http import HttpResponseForbidden, Http404
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from datetime import datetime
+import qsstats
 
 class SignUpView(generic.CreateView):
     form_class = RegistrationForm
@@ -35,6 +36,14 @@ class HomePageView(ListView):
 
     def get_queryset(self):
         return Person.objects.filter(user=self.request.user)
+
+class ContactReportView(ListView):
+    template_name = 'addressdb/user/contact_report.html'
+
+    def get_queryset(self):
+        qs = Person.objects.all()
+        return qs 
+
 
 class LoginView(generic.FormView):
     form_class = LoginForm

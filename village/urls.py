@@ -21,6 +21,8 @@ from django.views.generic import RedirectView
 from addressdb.views import LoginView
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from .views import UserReportView, IncompleteRegistrationReportView
 
 urlpatterns = [
  	url(r'^addressdb/', include('addressdb.urls', namespace="addressdb")),
@@ -45,4 +47,6 @@ urlpatterns = [
                             'template_name': 'addressdb/registration/password_reset_confirm.html'
                            }, name='password_reset_confirm'),
     url(r'^contact/', include('contact_form.urls')),
+    url(r'^user_report/$', login_required(UserReportView.as_view()), name='user_report'),
+    url(r'^incomplete_report/$', login_required(IncompleteRegistrationReportView.as_view()), name='incomplete_report'),
 ]

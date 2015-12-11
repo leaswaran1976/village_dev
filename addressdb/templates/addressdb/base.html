@@ -9,13 +9,24 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'addressdb/css/jquery-ui-timepicker-addon.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.10/css/dataTables.bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.1.0/css/buttons.dataTables.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script src="{% static 'addressdb/js/jquery-ui-timepicker-addon.min.js' %}"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="{% static 'addressdb/js/jquery.validate.min.js' %}"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.1.0/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.1.0/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.1.0/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.1.0/js/buttons.print.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'addressdb/css/custom.css' %}"/>
-    {% block css %}{% endblock css %} 
+    {% block css %}{% endblock css %}
     {% block head %}{% endblock head %}
 </head>
     <body>
@@ -35,11 +46,21 @@
 
                 <div class="navbar-collapse collapse navbar-right">
                     <ul class="nav navbar-nav" id="nav">
-                        <li class="active"><a href="{% url 'addressdb:home' %}"><strong>Home</strong></a></li>
+                        <li id="home" class="active"><a href="{% url 'addressdb:home' %}"><strong>Home</strong></a></li>
                         {% if user.is_authenticated %}
                             <li id="add_contact"><a href="{% url 'addressdb:add_contact' %}"><i class="fa fa-user-plus"></i><strong> Add Member </strong></a></li>
-                            <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> <strong>Logout</strong></a></li>
+                            <li id="logout"><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> <strong>Logout</strong></a></li>
                         {% endif %}
+                        {% if user.is_superuser %}
+                            <li id="reports" class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-list"></i><strong> Reports </strong><span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url 'user_report' %}"><i class="fa fa-user"></i><strong> User Registration</strong></a></li>
+                                    <li><a href="{% url 'addressdb:contact_report' %}"><i class="fa fa-users"></i><strong> All Contacts</strong></a></li>
+                                    <li><a href="{% url 'incomplete_report' %}"><i class="fa fa-chain-broken"></i><strong> Incomplete Registration</strong></a></li>
+                                </ul>
+                            </li>
+                        {% endif%}
                         <li id="contact_us"><a href="{% url 'contact_form' %}"><span class="glyphicon glyphicon-envelope"></span> <strong>Contact Us</strong></a></li>
                     </ul>
 
@@ -48,13 +69,12 @@
             </div>
         </div>
 
-        <div class="container vertical-center">
+        <div class="container-fluid vertical-center">
             {% block content %}{% endblock content %}
         </div>
 
         {% block js %}
         <script type="text/javascript">
-
         </script>
         {% endblock js %}
     </body>
