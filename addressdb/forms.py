@@ -213,9 +213,11 @@ class PersonForm(ModelForm):
         ('Jadavallabhar', 'Jadavallabhar'),
         ('Kilimangalam', 'Kilimangalam'),
         ('Maanu Pattar', 'Maanu Pattar'),
+        ('Nallepully', 'Nallepully'),
         ('Neelu Pattar', 'Neelu Pattar'),
         ('Seshan Pattar', 'Seshan Pattar'),
         ('Sivaraman Pattar', 'Sivaraman Pattar'),
+        ('Thiruvilwamalai', 'Thiruvilwamalai'),
         ('Vaadhyaar', 'Vaadhyaar'),
         ('NA', 'Not Available'),
     )
