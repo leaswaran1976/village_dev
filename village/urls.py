@@ -22,7 +22,7 @@ from addressdb.views import LoginView
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from .views import UserReportView, IncompleteRegistrationReportView
+from .views import UserReportView, IncompleteRegistrationReportView, send_email_incomplete_reg
 
 urlpatterns = [
  	url(r'^addressdb/', include('addressdb.urls', namespace="addressdb")),
@@ -49,4 +49,5 @@ urlpatterns = [
     url(r'^contact/', include('contact_form.urls')),
     url(r'^user_report/$', login_required(UserReportView.as_view()), name='user_report'),
     url(r'^incomplete_report/$', login_required(IncompleteRegistrationReportView.as_view()), name='incomplete_report'),
+    url(r'^incomplete_reg_email/$', send_email_incomplete_reg, name='incomplete_reg_email'),
 ]

@@ -80,7 +80,28 @@
     			lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
     			dom: 'Bfrtip',
         		buttons: [
-            		'csv', 'excel', 'print'
+            		'csv', 'excel', 'print',
+            		{
+            			text: 'Send Email',
+                		action: function ( e, dt, node, config ) {
+                    		//alert( 'Button activated' );
+                    		$.ajax({
+						        type: "POST",
+						        url: '/incomplete_reg_email/',  // or just url: "/my-url/path/"
+						        data: {
+						            csrfmiddlewaretoken: '{{ csrf_token }}',
+						            //board: board,
+						            //move_list: move_list.join(','),
+						        },
+						        success: function(data) {
+						            alert(data);
+						        },
+						        error: function(xhr, textStatus, errorThrown) {
+						            alert("Please report this error: "+errorThrown+xhr.status+xhr.responseText);
+						        }
+						    });
+                		}
+            		}
         		]
     		});
 
