@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'addressdb/css/jquery-ui-timepicker-addon.min.css' %}"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.10/css/dataTables.bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.1.0/css/buttons.dataTables.min.css"/>
@@ -58,6 +58,7 @@
                                     <li><a href="{% url 'user_report' %}"><i class="fa fa-user"></i><strong> User Registration</strong></a></li>
                                     <li><a href="{% url 'addressdb:contact_report' %}"><i class="fa fa-users"></i><strong> All Contacts</strong></a></li>
                                     <li><a href="{% url 'incomplete_report' %}"><i class="fa fa-chain-broken"></i><strong> Incomplete Registration</strong></a></li>
+                                    <li><a href="{% url 'addressdb:bulk_upload' %}"><i class="fa fa-upload"></i><strong> Bulk Upload</strong></a></li>
                                 </ul>
                             </li>
                         {% endif%}

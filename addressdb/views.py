@@ -225,3 +225,144 @@ class DeleteContactView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('addressdb:home')
+
+def bulk_upload(request):
+    template_name = 'addressdb/user/bulk_upload.html'
+    storage = messages.get_messages(request)
+    storage.used = True
+    if "GET" == request.method:
+        return render(request, template_name, {})
+    try:
+        csv_file = request.FILES["csv_file"]
+        print(csv_file)
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'File is not CSV type')
+            return HttpResponseRedirect(reverse_lazy("addressdb:bulk_upload"))
+        # if file is too large, return
+        if csv_file.multiple_chunks():
+            messages.error(request, "Uploaded file is too big (%.2f MB)." % (
+                csv_file.size / (1000 * 1000),))
+            return HttpResponseRedirect(reverse_lazy("addressdb:bulk_upload"))
+        file_data = csv_file.read().decode("utf-8")
+        lines = file_data.split("\r")
+        # loop over the lines and save them in db. If error , store as string and then display
+        loadError = ""
+        lineCount = 1
+        for line in lines:
+            print(line)
+            fields = line.split("|")
+            print(fields)
+            data_dict = {}
+            lineError = False
+
+            fieldValue = fields[0]
+            if fieldValue and len(fieldValue) > 3:
+                data_dict["firstname"] = fieldValue
+            else:
+                loadError += 'First Name was empty in line# {} or length of first name was less than 4\n'.format(lineCount)
+                lineError = True
+
+            fieldValue = fields[1]
+            if fieldValue:
+                data_dict["lastname"] = fieldValue
+            else:
+                loadError += 'Last Name was empty in line#' + \
+                    lineCount + '\n'
+                lineError = True
+
+            fieldValue = fields[2]
+            try:
+                validate_email(fieldValue)
+                data_dict["email"] = fieldValue
+            except ValidationError:
+                loadError += 'Email is not valid in line# {}\n'.format(lineCount)
+                lineError = True
+
+            fieldValue = fields[3]
+            if(fieldValue and re.match(r'^\+?1?\d{9,15}$', fieldValue) != None):
+                data_dict["phone"] = fieldValue
+            else:
+                loadError += 'Phone is not valid in line# {}. Phone number must be entered in the format: 999999999\n'.format(lineCount)
+                lineError = True
+
+            fieldValue = fields[4]
+            if fieldValue:
+                data_dict["address"] = fieldValue
+            else:
+                loadError += 'Address was empty in line# {}\n'.format(lineCount)
+                lineError = True
+
+            fieldValue = fields[5]
+            if fieldValue:
+                data_dict["city"] = fieldValue
+            else:
+                loadError += 'City was empty in line# {}\n'.format(lineCount)
+                lineError = True
+
+            fieldValue = fields[6]
+            if fieldValue:
+                data_dict["state"] = fieldValue
+            else:
+                loadError += 'State was empty in line# {}\n'.format(lineCount)
+                lineError = True
+
+            fieldValue = fields[7]
+            if fieldValue:
+                data_dict["country"] = fieldValue
+            else:
+                loadError += 'Country was empty in line#{}\n'.format(lineCount)
+                lineError = True
+
+            fieldValue = fields[8]
+            if fieldValue and fieldValue.isdigit():
+                data_dict["zipcode"] = fieldValue
+            else:
+                loadError += 'Zip Code was empty or incorrect in line# {}. Zip Code can contain only numbers\n'.format(lineCount)
+                lineError = True
+
+            if not lineError:
+                user = None
+                address = None
+                person = None
+                try:
+                    user = User._default_manager.get(username=data_dict["email"])
+                except User.DoesNotExist:
+                    user = User.objects.create_user(
+                        username=data_dict["email"], email=None, password='changeme')
+                    user.save()
+                    print('User after creation: ' + str(user) )
+
+                try:
+                    address = Contact.objects.get(
+                        address1=data_dict["address"], city=data_dict["city"], state=data_dict["state"], country=data_dict["country"], zipcode=data_dict["zipcode"], user=user)
+                except Contact.DoesNotExist:
+                    address = Contact.objects.create(user=user)
+                    address.address1 = data_dict["address"]
+                    address.city = data_dict["city"]
+                    address.state = data_dict["state"]
+                    address.country = data_dict["country"]
+                    address.zipcode = data_dict["zipcode"]
+                    address.save()
+                #print(address)
+
+                try:
+                    person = Person.objects.get(first_name=data_dict["firstname"], last_name=data_dict["lastname"], email=data_dict["email"])
+                except Person.DoesNotExist:
+                    person = Person.objects.create(user=user, address=address)
+                    person.first_name = data_dict["firstname"]
+                    person.last_name = data_dict["lastname"]
+                    person.email = data_dict["email"]
+                    person.primary_phone = data_dict["phone"]
+                    person.save()
+                #print(person)
+            else:
+                messages.error(request, loadError)
+            lineCount = lineCount + 1
+        messages.success(request, 'Bulk Upload Completed Successfully')
+    except Exception as e:
+        print("Exception in user code:")
+        print('-'*60)
+        traceback.print_exc(file=sys.stdout)
+        print('-'*60)
+        messages.error(request, "Unable to upload file. " + repr(e))
+    return HttpResponseRedirect(reverse_lazy("addressdb:bulk_upload"))

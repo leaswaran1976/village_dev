@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^edit_contact/(?P<contact_id>\d+)/$', login_required(ContactAddressWizard.as_view([PersonForm, ContactForm])), name='edit_contact'),
     url(r'^delete_contact/(?P<pk>\d+)/$', login_required(DeleteContactView.as_view()), name='delete_contact'),
     url(r'^contact_report/$', login_required(ContactReportView.as_view()), name='contact_report'),
+    url(r'^bulk_upload/$', views.bulk_upload, name='bulk_upload'),
 ]
